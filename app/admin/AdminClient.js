@@ -270,53 +270,20 @@ export default function AdminClient({ user }) {
                         {activeTab === 'sitio' && (
                             <div className={styles.sitioSection}>
                                 <div className={styles.sitioGrid}>
-                                    <div className={styles.configCard}>
-                                        <h3>🏠 Inicio y Nosotros</h3>
+                                    <div className={styles.configCard} style={{maxWidth:'800px', margin:'0 auto'}}>
+                                        <h3>🏠 Configuración de Inicio y Nosotros</h3>
+                                        <p style={{fontSize:'0.9rem', color:'#666', marginBottom:'1.5rem'}}>Edita los textos principales. Los cambios se guardan al hacer clic fuera del cuadro.</p>
                                         {config.map(item => (
                                             <div key={item.clave} className={styles.configItem}>
-                                                <label>{item.clave.replace(/_/g, ' ').toUpperCase()}</label>
+                                                <label style={{fontWeight:'bold', display:'block', marginBottom:'5px'}}>{item.clave.replace(/_/g, ' ').toUpperCase()}</label>
                                                 <textarea 
                                                     className={styles.textarea} 
                                                     defaultValue={item.valor} 
                                                     onBlur={(e) => handleUpdateConfig(item.clave, e.target.value)}
+                                                    style={{minHeight: item.clave.includes('titulo') ? '60px' : '120px'}}
                                                 />
                                             </div>
                                         ))}
-                                    </div>
-
-                                    <div className={styles.configCard}>
-                                        <h3>⛪ Ministerios</h3>
-                                        <div className={styles.tableContainer}>
-                                            <table className={styles.table}>
-                                                <thead><tr><th>Nombre</th><th>Encargado</th><th>Acciones</th></tr></thead>
-                                                <tbody>
-                                                    {ministerios.map(m => (
-                                                        <tr key={m.id}>
-                                                            <td>{m.nombre}</td>
-                                                            <td>{m.encargado}</td>
-                                                            <td>
-                                                                <button onClick={() => setEditingMinisterio(m)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        {editingMinisterio && (
-                                            <div className={styles.editModal} style={{marginTop:'2rem', padding:'1rem', border:'1px solid #ddd', borderRadius:'8px'}}>
-                                                <h4>Editar {editingMinisterio.nombre}</h4>
-                                                <form onSubmit={handleUpdateMinisterio}>
-                                                    <input className={styles.input} value={editingMinisterio.nombre} onChange={e => setEditingMinisterio({...editingMinisterio, nombre: e.target.value})} placeholder="Nombre" />
-                                                    <input className={styles.input} value={editingMinisterio.encargado} onChange={e => setEditingMinisterio({...editingMinisterio, encargado: e.target.value})} placeholder="Encargado" />
-                                                    <textarea className={styles.textarea} value={editingMinisterio.descripcion} onChange={e => setEditingMinisterio({...editingMinisterio, descripcion: e.target.value})} placeholder="Descripción" />
-                                                    <div style={{display:'flex', gap:'1rem'}}>
-                                                        <button type="submit" className={styles.submitBtn}>Guardar</button>
-                                                        <button type="button" onClick={() => setEditingMinisterio(null)} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>

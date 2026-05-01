@@ -1,37 +1,145 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import styles from "./ministerios.module.css";
 
 export default function MinisteriosClient() {
-    const [ministerios, setMinisterios] = useState([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchMinisterios();
-    }, []);
+    // Datos de ministerios pastorales (Fijos)
+    const familiasPastorales = [
+        {
+            id: 1,
+            nombre: 'Familia Pastoral',
+            descripcion: 'Liderazgo pastoral enfocado en el cuidado espiritual y la guía doctrinal de nuestra congregación.',
+            imagen: '/img/familia1.jpg'
+        },
+        {
+            id: 2,
+            nombre: 'Anciano',
+            descripcion: 'Liderazgo laico comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.',
+            imagen: '/img/familia2.jpg'
+        },
+        {
+            id: 3,
+            nombre: 'Anciano',
+            descripcion: 'Liderazgo laico dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.',
+            imagen: '/img/familia3.jpg'
+        }
+    ];
 
-    const fetchMinisterios = async () => {
-        setLoading(true);
-        try {
-            const { data } = await supabase.from('ministerios').select('*').order('id');
-            if (data && data.length > 0) {
-                setMinisterios(data);
-            }
-        } catch (error) { console.error(error); }
-        setLoading(false);
-    };
-
-    const familiasPastorales = ministerios.filter(m => m.categoria === 'pastoral');
-    const otrosMinisterios = ministerios.filter(m => m.categoria !== 'pastoral');
+    // Datos de otros ministerios (Fijos)
+    const otrosMinisterios = [
+        {
+            id: 1,
+            nombre: 'Ministerio de Matrimonios',
+            descripcion: 'Un espacio de encuentro y crecimiento espiritual para los matrimonios.',
+            encargado: 'Pr. Raul y Nena',
+            icono: 'bi-heart'
+        },
+        {
+            id: 2,
+            nombre: 'Ministerio de Varones',
+            descripcion: 'Formación bíblica y doctrinal para todas las edades.',
+            encargado: 'Rafael Guaran',
+            icono: 'bi-book'
+        },
+        {
+            id: 3,
+            nombre: 'Ministerio de Damas',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Nena',
+            icono: 'bi-heart'
+        },
+        {
+            id: 4,
+            nombre: 'Ministerio de Jóvenes',
+            descripcion: 'Formación bíblica y doctrinal para todas las edades.',
+            encargado: 'Carlos y Maria Jesus',
+            icono: 'bi-people'
+        },
+        {
+            id: 5,
+            nombre: 'Ministerio Infantil',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Nena',
+            icono: 'bi-star'
+        },
+        {
+            id: 6,
+            nombre: 'Ministerio de Alabanza',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Pablo Cosque',
+            icono: 'bi-music-note-beamed'
+        },
+        {
+            id: 7,
+            nombre: 'Ministerio de Misericordia',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Lolymar Padilla',
+            icono: 'bi-heart-fill'
+        },
+        {
+            id: 8,
+            nombre: 'Ministerio de Hospitalidad',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Lolymar Padilla',
+            icono: 'bi-house-heart'
+        },
+        {
+            id: 9,
+            nombre: 'Ministerio de Misiones y evangelismo',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Rodrigo Cardenas',
+            icono: 'bi-globe'
+        },
+        {
+            id: 10,
+            nombre: 'Ministerio de Aseo',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Jocelin',
+            icono: 'bi-droplet'
+        },
+        {
+            id: 11,
+            nombre: 'Ministerio de Biblioteca',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Carolina Santibañez',
+            icono: 'bi-book-half'
+        },
+        {
+            id: 12,
+            nombre: 'Ministerio de Audiovisual',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Marcelo',
+            icono: 'bi-camera-video'
+        },
+        {
+            id: 13,
+            nombre: 'Ministerio de Proyección',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Maria Jesus Ruíz',
+            icono: 'bi-display'
+        },
+        {
+            id: 14,
+            nombre: 'Ministerio de Redes Sociales',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Kamila Guaran y Gabrielle Natal',
+            icono: 'bi-share'
+        },
+        {
+            id: 15,
+            nombre: 'Ministerio de Tesoreria',
+            descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
+            encargado: 'Susana Silva',
+            icono: 'bi-cash-coin'
+        }
+    ];
 
     return (
         <div className={styles.pageContainer}>
-            {/* Navbar */}
             <Navbar />
 
             {/* Banner */}
@@ -51,7 +159,7 @@ export default function MinisteriosClient() {
                             <div key={familia.id} className={styles.pastoralCard}>
                                 <div className={styles.pastoralImageContainer}>
                                     <Image
-                                        src={familia.imagen || '/img/familia1.jpg'}
+                                        src={familia.imagen}
                                         alt={familia.nombre}
                                         width={400}
                                         height={350}
@@ -76,7 +184,7 @@ export default function MinisteriosClient() {
                         {otrosMinisterios.map(ministerio => (
                             <div key={ministerio.id} className={styles.ministerioCard}>
                                 <div className={styles.cardBody}>
-                                    <i className={`bi ${ministerio.icono || 'bi-people'} ${styles.ministerioIcon}`}></i>
+                                    <i className={`bi ${ministerio.icono} ${styles.ministerioIcon}`}></i>
                                     <h5 className={styles.cardTitle}>{ministerio.nombre}</h5>
                                     <p className={styles.cardText}>{ministerio.descripcion}</p>
                                     <div className={styles.encargado}>
@@ -89,7 +197,6 @@ export default function MinisteriosClient() {
                 </div>
             </section>
 
-            {/* Footer */}
             <Footer />
         </div>
     );
