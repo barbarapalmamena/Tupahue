@@ -23,22 +23,34 @@ export default function BibliotecaClient() {
     }, []);
 
     const cargarDatos = async () => {
+        console.log("Iniciando carga de datos en Biblioteca...");
         setLoading(true);
 
-        // Obtener usuario actual
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
+        try {
+            // Obtener usuario actual
+            const currentUser = await getCurrentUser();
+            setUser(currentUser);
+            console.log("Usuario cargado:", currentUser ? currentUser.email : "Sin sesión");
 
-        if (currentUser) {
-            const { getUserRole } = await import('@/lib/supabase');
-            const role = await getUserRole(currentUser.id);
-            setUserRole(role);
-        }
+            if (currentUser) {
+                const { getUserRole } = await import('@/lib/supabase');
+                const role = await getUserRole(currentUser.id);
+                setUserRole(role);
+                console.log("Rol cargado:", role);
+            }
 
-        // Obtener libros
-        const { data, error } = await getLibros();
-        if (!error && data) {
-            setLibros(data);
+            // Obtener libros
+            console.log("Llamando a getLibros()...");
+            const { data, error } = await getLibros();
+            
+            if (error) {
+                console.error("Error al cargar libros de Supabase:", error);
+            } else {
+                console.log("Libros recibidos de Supabase:", data);
+                if (data) setLibros(data);
+            }
+        } catch (err) {
+            console.error("Error crítico en cargarDatos:", err);
         }
 
         setLoading(false);
