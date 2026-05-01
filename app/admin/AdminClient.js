@@ -17,7 +17,18 @@ export default function AdminClient({ user }) {
     const [reservas, setReservas] = useState([]);
     const [articulos, setArticulos] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('reservas'); // reservas, articulos
+    const [activeTab, setActiveTab] = useState('reservas'); // reservas, articulos, libros
+    const [libros, setLibros] = useState([]);
+    const [newLibro, setNewLibro] = useState({ 
+        titulo: '', 
+        autor: '', 
+        categoria: 'Teología', 
+        paginas: '', 
+        cantidad: 1, 
+        imagen_url: '', 
+        disponible: true 
+    });
+    const [guardandoLibro, setGuardandoLibro] = useState(false);
     const [filter, setFilter] = useState('todas');
     const [newArticulo, setNewArticulo] = useState({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
     const [publicando, setPublicando] = useState(false);
@@ -26,8 +37,10 @@ export default function AdminClient({ user }) {
     useEffect(() => {
         if (activeTab === 'reservas') {
             fetchReservas();
-        } else {
+        } else if (activeTab === 'articulos') {
             fetchArticulos();
+        } else {
+            fetchLibros();
         }
     }, [activeTab]);
 
@@ -235,7 +248,13 @@ export default function AdminClient({ user }) {
                         className={`${styles.tabBtn} ${activeTab === 'articulos' ? styles.active : ''}`}
                         onClick={() => setActiveTab('articulos')}
                     >
-                        ✍️ Artículos de la Palabra
+                        ✍️ Artículos
+                    </button>
+                    <button 
+                        className={`${styles.tabBtn} ${activeTab === 'libros' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('libros')}
+                    >
+                        📚 Inventario Libros
                     </button>
                 </div>
 
@@ -320,7 +339,7 @@ export default function AdminClient({ user }) {
                             </div>
                         )}
                     </>
-                ) : (
+                ) : activeTab === 'articulos' ? (
                     <div className={styles.articlesSection}>
                         {/* Formulario de Nuevo Artículo */}
                         <div className={styles.formSection}>
@@ -386,6 +405,128 @@ export default function AdminClient({ user }) {
                                             <p>{art.contenido.substring(0, 100)}...</p>
                                         </div>
                                     ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className={styles.articlesSection}>
+                        <div className={styles.formSection}>
+                            <h2>📚 Añadir Nuevo Libro</h2>
+                            <form onSubmit={handleCrearLibro}>
+                                <div className={styles.formRow}>
+                                    <div className={styles.formGroup}>
+                                        <label>Título</label>
+                                        <input 
+                                            type="text" 
+                                            className={styles.input}
+                                            value={newLibro.titulo}
+                                            onChange={(e) => setNewLibro({...newLibro, titulo: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label>Autor</label>
+                                        <input 
+                                            type="text" 
+                                            className={styles.input}
+                                            value={newLibro.autor}
+                                            onChange={(e) => setNewLibro({...newLibro, autor: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className={styles.formRow}>
+                                    <div className={styles.formGroup}>
+                                        <label>Categoría</label>
+                                        <select 
+                                            className={styles.input}
+                                            value={newLibro.categoria}
+                                            onChange={(e) => setNewLibro({...newLibro, categoria: e.target.value})}
+                                        >
+                                            <option value="Teología">Teología</option>
+                                            <option value="Apologética">Apologética</option>
+                                            <option value="Ficción Cristiana">Ficción Cristiana</option>
+                                            <option value="Historia">Historia</option>
+                                            <option value="Devocionales">Devocionales</option>
+                                            <option value="Biografías">Biografías</option>
+                                        </select>
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label>Páginas</label>
+                                        <input 
+                                            type="number" 
+                                            className={styles.input}
+                                            value={newLibro.paginas}
+                                            onChange={(e) => setNewLibro({...newLibro, paginas: e.target.value})}
+                                        />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label>Cantidad (Stock)</label>
+                                        <input 
+                                            type="number" 
+                                            className={styles.input}
+                                            value={newLibro.cantidad}
+                                            onChange={(e) => setNewLibro({...newLibro, cantidad: e.target.value})}
+                                            min="1"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label>URL de la Imagen (Portada)</label>
+                                    <input 
+                                        type="text" 
+                                        className={styles.input}
+                                        value={newLibro.imagen_url}
+                                        onChange={(e) => setNewLibro({...newLibro, imagen_url: e.target.value})}
+                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                    />
+                                </div>
+
+                                <button type="submit" className={styles.submitBtn} disabled={guardandoLibro}>
+                                    {guardandoLibro ? 'Guardando...' : '💾 Guardar Libro'}
+                                </button>
+                            </form>
+                        </div>
+
+                        <div className={styles.listSection}>
+                            <h2>Libros en Catálogo</h2>
+                            {loading ? (
+                                <div className={styles.loading}>Cargando catálogo...</div>
+                            ) : libros.length === 0 ? (
+                                <div className={styles.empty}>No hay libros registrados.</div>
+                            ) : (
+                                <div className={styles.tableContainer}>
+                                    <table className={styles.table}>
+                                        <thead>
+                                            <tr>
+                                                <th>Título</th>
+                                                <th>Autor</th>
+                                                <th>Stock</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {libros.map(libro => (
+                                                <tr key={libro.id}>
+                                                    <td>{libro.titulo}</td>
+                                                    <td>{libro.autor}</td>
+                                                    <td>{libro.cantidad}</td>
+                                                    <td>
+                                                        <button 
+                                                            onClick={() => handleEliminarLibro(libro.id)}
+                                                            className={styles.btnDelete}
+                                                            style={{ color: '#dc3545' }}
+                                                        >
+                                                            <i className="bi bi-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             )}
                         </div>
