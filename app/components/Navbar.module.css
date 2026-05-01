@@ -21,21 +21,26 @@
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Empuja el menú a la derecha */
     align-items: center;
     width: 100%;
+    position: relative;
+    min-height: 90px;
 }
 
 .navbarBrand {
-    display: flex;
-    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-40%); /* Ajuste fino para que luzca bien */
+    z-index: 1100;
 }
 
 .logoNavbar {
-    height: 120px;
+    height: 220px;
     width: auto;
     object-fit: contain;
-    margin-top: 10px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
 }
 
 .navbarToggler {
