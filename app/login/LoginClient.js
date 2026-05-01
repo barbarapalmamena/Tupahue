@@ -144,9 +144,9 @@ export default function LoginClient() {
                                     />
                                     Recordarme
                                 </label>
-                                <a href="#" className={styles.forgotPassword}>
+                                <Link href="/recuperar-password" className={styles.forgotPassword}>
                                     ¿Olvidaste tu contraseña?
-                                </a>
+                                </Link>
                             </div>
 
                             <button
