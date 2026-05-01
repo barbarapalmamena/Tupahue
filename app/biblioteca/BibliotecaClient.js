@@ -14,6 +14,7 @@ export default function BibliotecaClient() {
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
+    const [userRole, setUserRole] = useState(null);
     const [reservando, setReservando] = useState(null);
 
     // Cargar libros y usuario
@@ -28,6 +29,12 @@ export default function BibliotecaClient() {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
 
+        if (currentUser) {
+            const { getUserRole } = await import('@/lib/supabase');
+            const role = await getUserRole(currentUser.id);
+            setUserRole(role);
+        }
+
         // Obtener libros
         const { data, error } = await getLibros();
         if (!error && data) {
@@ -41,6 +48,13 @@ export default function BibliotecaClient() {
         if (!user) {
             alert('Debes iniciar sesión para reservar un libro');
             router.push('/login');
+            return;
+        }
+
+        // Restringir a administradores
+        const isAdmin = userRole === 'admin' || user.user_metadata?.role === 'admin';
+        if (isAdmin) {
+            alert('Los administradores no pueden realizar reservas de libros.');
             return;
         }
 
