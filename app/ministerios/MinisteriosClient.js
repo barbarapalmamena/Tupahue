@@ -19,7 +19,9 @@ export default function MinisteriosClient() {
         setLoading(true);
         try {
             const { data } = await supabase.from('ministerios').select('*').order('id');
-            setMinisterios(data || []);
+            if (data && data.length > 0) {
+                setMinisterios(data);
+            }
         } catch (error) { console.error(error); }
         setLoading(false);
     };
@@ -49,7 +51,7 @@ export default function MinisteriosClient() {
                             <div key={familia.id} className={styles.pastoralCard}>
                                 <div className={styles.pastoralImageContainer}>
                                     <Image
-                                        src={familia.imagen}
+                                        src={familia.imagen || '/img/familia1.jpg'}
                                         alt={familia.nombre}
                                         width={400}
                                         height={350}
@@ -74,7 +76,7 @@ export default function MinisteriosClient() {
                         {otrosMinisterios.map(ministerio => (
                             <div key={ministerio.id} className={styles.ministerioCard}>
                                 <div className={styles.cardBody}>
-                                    <i className={`bi ${ministerio.icono} ${styles.ministerioIcon}`}></i>
+                                    <i className={`bi ${ministerio.icono || 'bi-people'} ${styles.ministerioIcon}`}></i>
                                     <h5 className={styles.cardTitle}>{ministerio.nombre}</h5>
                                     <p className={styles.cardText}>{ministerio.descripcion}</p>
                                     <div className={styles.encargado}>
