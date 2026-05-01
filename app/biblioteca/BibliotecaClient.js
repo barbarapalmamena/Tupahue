@@ -184,21 +184,29 @@ export default function BibliotecaClient() {
                                             </p>
                                         )}
                                         {libro.disponible ? (
-                                            <button
-                                                onClick={() => handleReservar(libro)}
-                                                className={styles.btnPrimary}
-                                                disabled={reservando === libro.id}
-                                            >
-                                                {reservando === libro.id ? (
-                                                    <>
-                                                        <i className="bi bi-hourglass-split"></i> Reservando...
-                                                    </>
+                                            <>
+                                                {userRole !== 'admin' && user?.user_metadata?.role !== 'admin' ? (
+                                                    <button
+                                                        onClick={() => handleReservar(libro)}
+                                                        className={styles.btnPrimary}
+                                                        disabled={reservando === libro.id}
+                                                    >
+                                                        {reservando === libro.id ? (
+                                                            <>
+                                                                <i className="bi bi-hourglass-split"></i> Reservando...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <i className="bi bi-bookmark-plus"></i> Reservar
+                                                            </>
+                                                        )}
+                                                    </button>
                                                 ) : (
-                                                    <>
-                                                        <i className="bi bi-bookmark-plus"></i> Reservar
-                                                    </>
+                                                    <p style={{ color: '#666', fontSize: '0.85rem', fontStyle: 'italic', marginTop: '1rem' }}>
+                                                        Los administradores no realizan reservas.
+                                                    </p>
                                                 )}
-                                            </button>
+                                            </>
                                         ) : (
                                             <span className={styles.badgeDanger}>
                                                 <i className="bi bi-x-circle"></i> No disponible

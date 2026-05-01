@@ -116,14 +116,16 @@ export default function Navbar({ user, onLogout }) {
                                         </Link>
                                     </li>
                                 )}
-                                <li className={styles.navItem}>
-                                    <Link
-                                        className={`${styles.navLink} ${pathname === '/mis-reservas' ? styles.active : ''}`}
-                                        href="/mis-reservas"
-                                    >
-                                        Mis Reservas
-                                    </Link>
-                                </li>
+                                {userRole !== 'admin' && user.user_metadata?.role !== 'admin' && (
+                                    <li className={styles.navItem}>
+                                        <Link
+                                            className={`${styles.navLink} ${pathname === '/mis-reservas' ? styles.active : ''}`}
+                                            href="/mis-reservas"
+                                        >
+                                            Mis Reservas
+                                        </Link>
+                                    </li>
+                                )}
                                 <li className={styles.navItem}>
                                     <button
                                         className={styles.btnLogout}
