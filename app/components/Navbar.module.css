@@ -95,9 +95,10 @@
     height: 38px;
     display: inline-flex;
     align-items: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     border-radius: 6px;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .navLink:hover {
@@ -106,7 +107,6 @@
 
 .navLink.active {
     background-color: rgba(255, 255, 255, 0.2);
-    font-weight: 600;
 }
 
 /* ===== BOTÓN LOGIN EN NAVBAR ===== */
@@ -114,10 +114,11 @@
     background-color: #5a6a85;
     color: white;
     border-radius: 6px;
-    padding: 0 18px;
+    padding: 0 1rem;
     height: 38px;
     font-weight: 600;
-    transition: all 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -127,7 +128,6 @@
 
 .btnLogin:hover {
     background-color: #6a7a95;
-    transform: translateY(-2px);
 }
 
 /* ===== BOTÓN LOGOUT EN NAVBAR ===== */
@@ -136,10 +136,11 @@
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 0 18px;
+    padding: 0 1rem;
     height: 38px;
     font-weight: 600;
-    transition: all 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     cursor: pointer;
     margin-left: 0.5rem;
     display: inline-flex;
@@ -149,7 +150,6 @@
 
 .btnLogout:hover {
     background-color: #6a7a95;
-    transform: translateY(-2px);
 }
 
 /* ===== BOTÓN ADMIN EN NAVBAR ===== */
@@ -158,10 +158,11 @@
     color: white !important;
     border: none;
     border-radius: 6px;
-    padding: 0 18px;
+    padding: 0 1rem;
     height: 38px;
     font-weight: 600;
-    transition: all 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -172,8 +173,6 @@
 
 .btnAdmin:hover {
     background-color: #6a7a95 !important;
-    transform: translateY(-2px);
-    color: white !important;
 }
 
 /* ===== RESPONSIVE ===== */
