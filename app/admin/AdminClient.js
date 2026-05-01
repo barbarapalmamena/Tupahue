@@ -15,46 +15,93 @@ import styles from './admin.module.css';
 
 export default function AdminClient({ user }) {
     const [reservas, setReservas] = useState([]);
+    const [articulos, setArticulos] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('todas'); // todas, activas, devueltas
+    const [activeTab, setActiveTab] = useState('reservas'); // reservas, articulos
+    const [filter, setFilter] = useState('todas');
+    const [newArticulo, setNewArticulo] = useState({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
+    const [publicando, setPublicando] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        fetchReservas();
-    }, []);
+        if (activeTab === 'reservas') {
+            fetchReservas();
+        } else {
+            fetchArticulos();
+        }
+    }, [activeTab]);
 
     async function fetchReservas() {
+        setLoading(true);
         try {
-            // Obtener el token del usuario actual
             const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
 
-            if (!session) {
-                console.error('No hay sesión activa');
-                setReservas([]);
-                setLoading(false);
-                return;
-            }
-
-            // Llamar a la API que tiene acceso a los datos de usuarios
             const response = await fetch('/api/admin/reservas', {
-                headers: {
-                    'Authorization': `Bearer ${session.access_token}`
-                }
+                headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
 
-            if (!response.ok) {
-                throw new Error('Error al obtener reservas');
-            }
-
+            if (!response.ok) throw new Error('Error al obtener reservas');
             const { data } = await response.json();
             setReservas(data || []);
         } catch (error) {
             console.error('Error fetching reservas:', error);
-            setReservas([]);
         } finally {
             setLoading(false);
         }
     }
+
+    async function fetchArticulos() {
+        setLoading(true);
+        try {
+            const { getArticulos } = await import('@/lib/supabase');
+            const { data, error } = await getArticulos();
+            if (error) throw error;
+            setArticulos(data || []);
+        } catch (error) {
+            console.error('Error fetching articulos:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleCrearArticulo = async (e) => {
+        e.preventDefault();
+        if (!newArticulo.titulo || !newArticulo.contenido) {
+            alert('Por favor completa el título y el contenido');
+            return;
+        }
+
+        setPublicando(true);
+        try {
+            const { crearArticulo } = await import('@/lib/supabase');
+            const { error } = await crearArticulo(newArticulo);
+            if (error) throw error;
+
+            alert('✅ Artículo publicado con éxito');
+            setNewArticulo({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
+            fetchArticulos();
+        } catch (error) {
+            console.error('Error al publicar:', error);
+            alert('❌ Error al publicar el artículo');
+        } finally {
+            setPublicando(false);
+        }
+    };
+
+    const handleEliminarArticulo = async (id) => {
+        if (!confirm('¿Estás seguro de que deseas eliminar este artículo?')) return;
+
+        try {
+            const { eliminarArticulo } = await import('@/lib/supabase');
+            const { error } = await eliminarArticulo(id);
+            if (error) throw error;
+            fetchArticulos();
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('❌ Error al eliminar el artículo');
+        }
+    };
 
     const handleLogout = async () => {
         await signOut();
@@ -167,126 +214,181 @@ export default function AdminClient({ user }) {
                 <div className={styles.adminHeader}>
                     <div>
                         <h1 className={styles.title}>Panel de Administración</h1>
-                        <p className={styles.subtitle}>Gestión de Reservas de Biblioteca</p>
+                        <p className={styles.subtitle}>Gestión integral de la Iglesia</p>
                     </div>
-                    <button
-                        onClick={generateMonthlyReport}
-                        className={styles.reportBtn}
+                    {activeTab === 'reservas' && (
+                        <button onClick={generateMonthlyReport} className={styles.reportBtn}>
+                            📊 Generar Reporte Mensual
+                        </button>
+                    )}
+                </div>
+
+                {/* Tabs de Navegación */}
+                <div className={styles.tabs}>
+                    <button 
+                        className={`${styles.tabBtn} ${activeTab === 'reservas' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('reservas')}
                     >
-                        📊 Generar Reporte Mensual
+                        📚 Préstamos
+                    </button>
+                    <button 
+                        className={`${styles.tabBtn} ${activeTab === 'articulos' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('articulos')}
+                    >
+                        ✍️ Artículos de la Palabra
                     </button>
                 </div>
 
-                {/* Filtros */}
-                <div className={styles.filterContainer}>
-                    <button
-                        className={`${styles.filterBtn} ${filter === 'todas' ? styles.active : ''}`}
-                        onClick={() => setFilter('todas')}
-                    >
-                        Todas ({reservas.length})
-                    </button>
-                    <button
-                        className={`${styles.filterBtn} ${filter === 'activas' ? styles.active : ''}`}
-                        onClick={() => setFilter('activas')}
-                    >
-                        Activas ({reservas.filter(r => r.estado === 'activa').length})
-                    </button>
-                    <button
-                        className={`${styles.filterBtn} ${filter === 'devueltas' ? styles.active : ''}`}
-                        onClick={() => setFilter('devueltas')}
-                    >
-                        Devueltas ({reservas.filter(r => r.estado === 'devuelto').length})
-                    </button>
-                </div>
+                {activeTab === 'reservas' ? (
+                    <>
+                        {/* Filtros de Reservas */}
+                        <div className={styles.filterContainer}>
+                            <button className={`${styles.filterBtn} ${filter === 'todas' ? styles.active : ''}`} onClick={() => setFilter('todas')}>
+                                Todas ({reservas.length})
+                            </button>
+                            <button className={`${styles.filterBtn} ${filter === 'activas' ? styles.active : ''}`} onClick={() => setFilter('activas')}>
+                                Activas ({reservas.filter(r => r.estado === 'activa').length})
+                            </button>
+                            <button className={`${styles.filterBtn} ${filter === 'devueltas' ? styles.active : ''}`} onClick={() => setFilter('devueltas')}>
+                                Devueltas ({reservas.filter(r => r.estado === 'devuelto').length})
+                            </button>
+                        </div>
 
-                {/* Tabla de reservas */}
-                {loading ? (
-                    <div className={styles.loading}>Cargando reservas...</div>
-                ) : filteredReservas.length === 0 ? (
-                    <div className={styles.empty}>No hay reservas para mostrar</div>
-                ) : (
-                    <div className={styles.tableContainer}>
-                        <table className={styles.table}>
-                            <thead>
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Email</th>
-                                    <th>Libro</th>
-                                    <th>Autor</th>
-                                    <th>Fecha Reserva</th>
-                                    <th>Estado</th>
-                                    <th>Días Restantes</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredReservas.map((reserva) => {
-                                    const daysRemaining = getDaysRemaining(reserva.fecha_vencimiento, reserva.created_at, reserva.libros?.paginas);
-                                    const userName = reserva.usuario?.nombre || 'Usuario';
-                                    const userEmail = reserva.usuario?.email || 'N/A';
-
-                                    return (
-                                        <tr key={reserva.id}>
-                                            <td>{userName}</td>
-                                            <td>{userEmail}</td>
-                                            <td>{reserva.libros?.titulo || 'N/A'}</td>
-                                            <td>{reserva.libros?.autor || 'N/A'}</td>
-                                            <td>{new Date(reserva.created_at).toLocaleDateString('es-CL')}</td>
-                                            <td>
-                                                <span className={`${styles.badge} ${reserva.estado === 'activa' ? styles.badgeActive : styles.badgeReturned
-                                                    }`}>
-                                                    {reserva.estado === 'activa' ? 'Activa' : 'Devuelto'}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                {reserva.estado === 'activa' ? (
-                                                    <span
-                                                        className={styles.daysRemaining}
-                                                        style={{ color: getStatusColor(daysRemaining) }}
-                                                    >
-                                                        {daysRemaining > 0
-                                                            ? `${daysRemaining} días`
-                                                            : daysRemaining === 0
-                                                                ? 'Hoy vence'
-                                                                : `${Math.abs(daysRemaining)} días atrasado`
-                                                        }
-                                                    </span>
-                                                ) : (
-                                                    <span className={styles.returned}>
-                                                        {reserva.fecha_devolucion
-                                                            ? new Date(reserva.fecha_devolucion).toLocaleDateString('es-CL')
-                                                            : 'Devuelto'
-                                                        }
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td>
-                                                {reserva.estado === 'activa' ? (
-                                                    <div className={styles.actionButtons}>
-                                                        <button
-                                                            onClick={() => handleSendReminder(reserva.id)}
-                                                            className={styles.btnReminder}
-                                                            title="Enviar recordatorio"
-                                                        >
-                                                            <i className="bi bi-envelope"></i> Enviar
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleEliminarReserva(reserva.id, reserva.libro_id)}
-                                                            className={styles.btnDelete}
-                                                            title="Eliminar reserva"
-                                                        >
-                                                            <i className="bi bi-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <span style={{ color: '#6c757d' }}>-</span>
-                                                )}
-                                            </td>
+                        {loading ? (
+                            <div className={styles.loading}>Cargando reservas...</div>
+                        ) : filteredReservas.length === 0 ? (
+                            <div className={styles.empty}>No hay reservas para mostrar</div>
+                        ) : (
+                            <div className={styles.tableContainer}>
+                                <table className={styles.table}>
+                                    <thead>
+                                        <tr>
+                                            <th>Usuario</th>
+                                            <th>Email</th>
+                                            <th>Libro</th>
+                                            <th>Autor</th>
+                                            <th>Fecha Reserva</th>
+                                            <th>Estado</th>
+                                            <th>Días Restantes</th>
+                                            <th>Acciones</th>
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                    </thead>
+                                    <tbody>
+                                        {filteredReservas.map((reserva) => {
+                                            const daysRemaining = getDaysRemaining(reserva.fecha_vencimiento, reserva.created_at, reserva.libros?.paginas);
+                                            const userName = reserva.usuario?.nombre || 'Usuario';
+                                            const userEmail = reserva.usuario?.email || 'N/A';
+
+                                            return (
+                                                <tr key={reserva.id}>
+                                                    <td>{userName}</td>
+                                                    <td>{userEmail}</td>
+                                                    <td>{reserva.libros?.titulo || 'N/A'}</td>
+                                                    <td>{reserva.libros?.autor || 'N/A'}</td>
+                                                    <td>{new Date(reserva.created_at).toLocaleDateString('es-CL')}</td>
+                                                    <td>
+                                                        <span className={`${styles.badge} ${reserva.estado === 'activa' ? styles.badgeActive : styles.badgeReturned}`}>
+                                                            {reserva.estado === 'activa' ? 'Activa' : 'Devuelto'}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {reserva.estado === 'activa' ? (
+                                                            <span className={styles.daysRemaining} style={{ color: getStatusColor(daysRemaining) }}>
+                                                                {daysRemaining > 0 ? `${daysRemaining} días` : daysRemaining === 0 ? 'Hoy vence' : `${Math.abs(daysRemaining)} días atrasado`}
+                                                            </span>
+                                                        ) : (
+                                                            <span className={styles.returned}>{reserva.fecha_devolucion ? new Date(reserva.fecha_devolucion).toLocaleDateString('es-CL') : 'Devuelto'}</span>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {reserva.estado === 'activa' ? (
+                                                            <div className={styles.actionButtons}>
+                                                                <button onClick={() => handleSendReminder(reserva.id)} className={styles.btnReminder} title="Enviar recordatorio">
+                                                                    <i className="bi bi-envelope"></i> Enviar
+                                                                </button>
+                                                                <button onClick={() => handleEliminarReserva(reserva.id, reserva.libro_id)} className={styles.btnDelete} title="Eliminar reserva">
+                                                                    <i className="bi bi-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        ) : <span style={{ color: '#6c757d' }}>-</span>}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div className={styles.articlesSection}>
+                        {/* Formulario de Nuevo Artículo */}
+                        <div className={styles.formSection}>
+                            <h2>📝 Publicar Nuevo Artículo</h2>
+                            <form onSubmit={handleCrearArticulo}>
+                                <div className={styles.formGroup}>
+                                    <label>Título del Artículo</label>
+                                    <input 
+                                        type="text" 
+                                        className={styles.input}
+                                        value={newArticulo.titulo}
+                                        onChange={(e) => setNewArticulo({...newArticulo, titulo: e.target.value})}
+                                        placeholder="Ej: Reflexión sobre el Salmo 23"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Contenido</label>
+                                    <textarea 
+                                        className={styles.textarea}
+                                        value={newArticulo.contenido}
+                                        onChange={(e) => setNewArticulo({...newArticulo, contenido: e.target.value})}
+                                        placeholder="Escribe aquí tu reflexión..."
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Autor (Opcional)</label>
+                                    <input 
+                                        type="text" 
+                                        className={styles.input}
+                                        value={newArticulo.autor}
+                                        onChange={(e) => setNewArticulo({...newArticulo, autor: e.target.value})}
+                                    />
+                                </div>
+                                <button type="submit" className={styles.submitBtn} disabled={publicando}>
+                                    {publicando ? 'Publicando...' : '🚀 Publicar Artículo'}
+                                </button>
+                            </form>
+                        </div>
+
+                        {/* Lista de Artículos Existentes */}
+                        <div className={styles.listSection}>
+                            <h2>Artículos Publicados</h2>
+                            {loading ? (
+                                <div className={styles.loading}>Cargando artículos...</div>
+                            ) : articulos.length === 0 ? (
+                                <div className={styles.empty}>Aún no has publicado ningún artículo.</div>
+                            ) : (
+                                <div className={styles.articlesGrid}>
+                                    {articulos.map(art => (
+                                        <div key={art.id} className={styles.articleCard}>
+                                            <button 
+                                                className={styles.btnDeleteArticle}
+                                                onClick={() => handleEliminarArticulo(art.id)}
+                                                title="Eliminar artículo"
+                                            >
+                                                <i className="bi bi-x"></i>
+                                            </button>
+                                            <h3>{art.titulo}</h3>
+                                            <div className={styles.articleMeta}>
+                                                <span>Por: {art.autor || 'Anónimo'}</span> • 
+                                                <span> {new Date(art.created_at).toLocaleDateString('es-CL')}</span>
+                                            </div>
+                                            <p>{art.contenido.substring(0, 100)}...</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>

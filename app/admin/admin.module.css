@@ -293,3 +293,138 @@
         font-size: 0.85rem;
     }
 }
+
+/* ===== PESTAÑAS (TABS) ===== */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5rem;
+}
+
+.tabBtn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tabBtn.active {
+    color: #3c4d6b;
+    border-bottom: 3px solid #3c4d6b;
+}
+
+.tabBtn:hover:not(.active) {
+    color: #3c4d6b;
+    background-color: rgba(60, 77, 107, 0.05);
+}
+
+/* ===== FORMULARIO DE ARTÍCULOS ===== */
+.formSection {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 3rem;
+    max-width: 800px;
+}
+
+.formSection h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #3c4d6b;
+}
+
+.formGroup {
+    margin-bottom: 1.2rem;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.input, .textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.submitBtn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submitBtn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* ===== GRID DE ARTÍCULOS EN ADMIN ===== */
+.articlesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.articleCard {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    position: relative;
+}
+
+.articleCard h3 {
+    margin-top: 0;
+    color: #3c4d6b;
+}
+
+.articleMeta {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.btnDeleteArticle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btnDeleteArticle:hover {
+    background: #cc0000;
+}

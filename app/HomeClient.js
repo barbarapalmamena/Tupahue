@@ -6,19 +6,34 @@ import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import styles from "./page.module.css";
-import { getCurrentUser, signOut } from '@/lib/supabase';
+import { getCurrentUser, signOut, getArticulos } from '@/lib/supabase';
 
 export default function HomeClient() {
     const router = useRouter();
     const [user, setUser] = useState(null);
+    const [articulos, setArticulos] = useState([]);
+    const [loadingArticulos, setLoadingArticulos] = useState(true);
 
     useEffect(() => {
         loadUser();
+        fetchArticulos();
     }, []);
 
     const loadUser = async () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
+    };
+
+    const fetchArticulos = async () => {
+        try {
+            const { data, error } = await getArticulos();
+            if (error) throw error;
+            setArticulos(data || []);
+        } catch (error) {
+            console.error('Error loading articulos:', error);
+        } finally {
+            setLoadingArticulos(false);
+        }
     };
 
     const handleLogout = async () => {
@@ -149,6 +164,33 @@ export default function HomeClient() {
                     </div>
                 </div>
             </section>
+
+            {/* Sección de Artículos / Palabra de Vida */}
+            {articulos.length > 0 && (
+                <section className={styles.articlesSection}>
+                    <div className={styles.container}>
+                        <h2 className={styles.sectionTitle}>Palabra de Vida</h2>
+                        <div className={styles.articlesGrid}>
+                            {articulos.slice(0, 3).map((articulo) => (
+                                <article key={articulo.id} className={styles.articleCard}>
+                                    <div className={styles.articleBody}>
+                                        <div className={styles.articleMeta}>
+                                            {new Date(articulo.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                        </div>
+                                        <h3 className={styles.articleTitle}>{articulo.titulo}</h3>
+                                        <p className={styles.articleText}>
+                                            {articulo.contenido}
+                                        </p>
+                                        <span className={styles.readMoreBtn}>
+                                            Publicado por: {articulo.autor || 'La Iglesia'}
+                                        </span>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Feed de Instagram */}
             <section className={styles.instagramSection}>
