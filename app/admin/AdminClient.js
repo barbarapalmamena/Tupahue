@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { signOut, supabase } from '@/lib/supabase';
+import { 
+    getCurrentUser, 
+    signOut, 
+    devolverLibro, 
+    eliminarReserva 
+} from '../../lib/supabase';
+import { supabase } from '@/lib/supabase';
 import styles from './admin.module.css';
 
 export default function AdminClient({ user }) {
@@ -81,7 +87,7 @@ export default function AdminClient({ user }) {
         return '#28a745'; // Verde - tiempo suficiente
     };
 
-    const sendReminder = async (reservaId) => {
+    const handleSendReminder = async (reservaId) => {
         if (!confirm('¿Enviar recordatorio de devolución a este usuario?')) {
             return;
         }
@@ -107,6 +113,23 @@ export default function AdminClient({ user }) {
         } catch (error) {
             console.error('Error:', error);
             alert(`❌ ${error.message}`);
+        }
+    };
+
+    const handleEliminarReserva = async (reservaId, libroId) => {
+        if (!confirm('¿Estás seguro de que deseas eliminar esta reserva? El libro volverá a estar disponible.')) {
+            return;
+        }
+
+        try {
+            const { error } = await eliminarReserva(reservaId, libroId);
+            if (error) throw error;
+            
+            alert('✅ Reserva eliminada con éxito.');
+            fetchReservas(); // Recargar la tabla
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('❌ Error al eliminar la reserva.');
         }
     };
 
@@ -239,13 +262,22 @@ export default function AdminClient({ user }) {
                                             </td>
                                             <td>
                                                 {reserva.estado === 'activa' ? (
-                                                    <button
-                                                        className={styles.btnSendReminder}
-                                                        onClick={() => sendReminder(reserva.id)}
-                                                        title="Enviar recordatorio de devolución"
-                                                    >
-                                                        📧 Enviar
-                                                    </button>
+                                                    <div className={styles.actionButtons}>
+                                                        <button
+                                                            onClick={() => handleSendReminder(reserva.id)}
+                                                            className={styles.btnReminder}
+                                                            title="Enviar recordatorio"
+                                                        >
+                                                            <i className="bi bi-envelope"></i> Enviar
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleEliminarReserva(reserva.id, reserva.libro_id)}
+                                                            className={styles.btnDelete}
+                                                            title="Eliminar reserva"
+                                                        >
+                                                            <i className="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 ) : (
                                                     <span style={{ color: '#6c757d' }}>-</span>
                                                 )}
