@@ -1,117 +1,126 @@
 'use client';
+
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
-import { supabase, signOut } from '@/lib/supabase';
 
-export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+export default function Navbar({ user, onLogout }) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const pathname = usePathname();
 
-    useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-            if (user) {
-                const { data } = await supabase
-                    .from('perfiles')
-                    .select('rol')
-                    .eq('id', user.id)
-                    .single();
-                if (data?.rol === 'admin') {
-                    setIsAdmin(true);
-                }
-            }
-        };
-        getUser();
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            if (!session?.user) {
-                setIsAdmin(false);
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const handleLogout = async () => {
-        await signOut();
-        setUser(null);
-        setIsAdmin(false);
-        setIsOpen(false);
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
     };
 
-    const toggleMenu = () => setIsOpen(!isOpen);
-    const closeMenu = () => setIsOpen(false);
-
-    const isActive = (path) => pathname === path;
+    // Cerrar menú al cambiar de página
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
 
     return (
-        <nav className={styles.navbar}>
+        <nav className={`${styles.navbar} ${styles.bgBlue}`}>
             <div className={styles.navbarContainer}>
-                <Link href="/" className={styles.navbarBrand} onClick={closeMenu}>
-                    <img src="/img/LogoTupahue.png" alt="Logo Tupahue" className={styles.logoNavbar} />
+                <Link href="/" className={styles.navbarBrand}>
+                    <Image
+                        src="/img/LogoTupahue.png"
+                        className={styles.logoNavbar}
+                        alt="Logo Iglesia Tupahue"
+                        width={150}
+                        height={150}
+                        priority
+                    />
                 </Link>
 
-                <button className={styles.navbarToggler} onClick={toggleMenu} aria-label="Toggle navigation">
+                <button
+                    className={styles.navbarToggler}
+                    type="button"
+                    id="navbarToggle"
+                    onClick={toggleMenu}
+                    aria-label="Toggle navigation"
+                >
                     <span className={styles.navbarTogglerIcon}></span>
                 </button>
 
-                <div className={`${styles.navbarCollapse} ${isOpen ? styles.navbarCollapseShow : ''}`}>
+                <div
+                    className={`${styles.navbarCollapse} ${isMenuOpen ? styles.show : ''}`}
+                    id="navbarNav"
+                >
                     <ul className={styles.navbarNav}>
                         <li className={styles.navItem}>
-                            <Link href="/" className={`${styles.navLink} ${isActive('/') ? styles.navLinkActive : ''}`} onClick={closeMenu}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}
+                                href="/"
+                            >
                                 Inicio
                             </Link>
                         </li>
                         <li className={styles.navItem}>
-                            <Link href="/actividades" className={`${styles.navLink} ${isActive('/actividades') ? styles.navLinkActive : ''}`} onClick={closeMenu}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/actividades' ? styles.active : ''}`}
+                                href="/actividades"
+                            >
                                 Actividades
                             </Link>
                         </li>
                         <li className={styles.navItem}>
-                            <Link href="/nosotros" className={`${styles.navLink} ${isActive('/nosotros') ? styles.navLinkActive : ''}`} onClick={closeMenu}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/nosotros' ? styles.active : ''}`}
+                                href="/nosotros"
+                            >
                                 Nosotros
                             </Link>
                         </li>
                         <li className={styles.navItem}>
-                            <Link href="/ministerios" className={`${styles.navLink} ${isActive('/ministerios') ? styles.navLinkActive : ''}`} onClick={closeMenu}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/ministerios' ? styles.active : ''}`}
+                                href="/ministerios"
+                            >
                                 Ministerios
                             </Link>
                         </li>
                         <li className={styles.navItem}>
-                            <Link href="/biblioteca" className={`${styles.navLink} ${isActive('/biblioteca') ? styles.navLinkActive : ''}`} onClick={closeMenu}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/biblioteca' ? styles.active : ''}`}
+                                href="/biblioteca"
+                            >
                                 Biblioteca
                             </Link>
                         </li>
-
                         {user ? (
                             <>
-                                {isAdmin && (
+                                {/* Mostrar botón Admin solo para administradores */}
+                                {(user.email === 'barbarapalmamena@gmail.com' || user.email === 'ba.palmam@duocuc.cl' || user.user_metadata?.role === 'admin') && (
                                     <li className={styles.navItem}>
-                                        <Link href="/admin" className={styles.btnAdmin} onClick={closeMenu}>
+                                        <Link
+                                            className={`${styles.navLink} ${styles.btnAdmin} ${pathname === '/admin' ? styles.active : ''}`}
+                                            href="/admin"
+                                        >
                                             Admin
                                         </Link>
                                     </li>
                                 )}
                                 <li className={styles.navItem}>
-                                    <Link href="/mis-reservas" className={styles.navLink} onClick={closeMenu}>
+                                    <Link
+                                        className={`${styles.navLink} ${pathname === '/mis-reservas' ? styles.active : ''}`}
+                                        href="/mis-reservas"
+                                    >
                                         Mis Reservas
                                     </Link>
                                 </li>
                                 <li className={styles.navItem}>
-                                    <button onClick={handleLogout} className={styles.btnLogout}>
+                                    <button
+                                        className={styles.btnLogout}
+                                        onClick={onLogout}
+                                    >
                                         Cerrar Sesión
                                     </button>
                                 </li>
                             </>
                         ) : (
                             <li className={styles.navItem}>
-                                <Link href="/login" className={styles.btnLogin} onClick={closeMenu}>
+                                <Link className={styles.btnLogin} href="/login">
                                     Iniciar Sesión
                                 </Link>
                             </li>
