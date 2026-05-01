@@ -34,7 +34,8 @@ export default function Navbar({ user, onLogout }) {
         setIsMenuOpen(false);
     }, [pathname]);
 
-    return         <nav className={styles.navbar}>
+    return (
+        <nav className={styles.navbar}>
             <div className={styles.headerTop}>
                 <Link href="/" className={styles.navbarBrand}>
                     <Image
@@ -108,14 +109,14 @@ export default function Navbar({ user, onLogout }) {
                             {user ? (
                                 <>
                                     {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
-                                            <li className={styles.navItem}>
-                                                <Link
-                                                    className={`${styles.navLink} ${pathname === '/admin' ? styles.active : ''}`}
-                                                    href="/admin"
-                                                >
-                                                    Panel
-                                                </Link>
-                                            </li>
+                                        <li className={styles.navItem}>
+                                            <Link
+                                                className={`${styles.navLink} ${pathname === '/admin' ? styles.active : ''}`}
+                                                href="/admin"
+                                            >
+                                                Panel
+                                            </Link>
+                                        </li>
                                     )}
                                     <li className={styles.navItem}>
                                         <button
