@@ -8,11 +8,26 @@ import styles from './Navbar.module.css';
 
 export default function Navbar({ user, onLogout }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [userRole, setUserRole] = useState(null);
     const pathname = usePathname();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    // Cargar rol del usuario
+    useEffect(() => {
+        if (user) {
+            const fetchRole = async () => {
+                const { getUserRole } = await import('@/lib/supabase');
+                const role = await getUserRole(user.id);
+                setUserRole(role);
+            };
+            fetchRole();
+        } else {
+            setUserRole(null);
+        }
+    }, [user]);
 
     // Cerrar menú al cambiar de página
     useEffect(() => {
@@ -90,8 +105,8 @@ export default function Navbar({ user, onLogout }) {
                         </li>
                         {user ? (
                             <>
-                                {/* Mostrar botón Admin solo para administradores */}
-                                {(user.email === 'barbarapalmamena@gmail.com' || user.email === 'ba.palmam@duocuc.cl' || user.user_metadata?.role === 'admin') && (
+                                {/* Mostrar botón Admin solo para administradores (rol en DB o metadata) */}
+                                {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
                                     <li className={styles.navItem}>
                                         <Link
                                             className={`${styles.navLink} ${styles.btnAdmin} ${pathname === '/admin' ? styles.active : ''}`}
