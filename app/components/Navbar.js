@@ -112,7 +112,7 @@ export default function Navbar({ user, onLogout }) {
                                                 className={styles.btnAdmin}
                                                 href="/admin"
                                             >
-                                                Admin
+                                                Panel
                                             </Link>
                                         </li>
                                 )}
