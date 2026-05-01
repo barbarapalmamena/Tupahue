@@ -146,21 +146,22 @@ export default function AdminClient({ user }) {
 
         setGuardandoLibro(true);
         try {
+            const libroPayload = {
+                ...newLibro,
+                paginas: parseInt(newLibro.paginas) || 0,
+                cantidad: parseInt(newLibro.cantidad) || 0,
+                disponible: parseInt(newLibro.cantidad) > 0,
+                imagen: newLibro.imagen_url // Compatibilidad con columna 'imagen'
+            };
+
             if (editingLibroId) {
-                const { error } = await actualizarLibro(editingLibroId, {
-                    ...newLibro,
-                    paginas: parseInt(newLibro.paginas) || 0,
-                    cantidad: parseInt(newLibro.cantidad) || 0,
-                    disponible: parseInt(newLibro.cantidad) > 0
-                });
+                const { error } = await actualizarLibro(editingLibroId, libroPayload);
                 if (error) throw error;
                 alert('✅ Libro actualizado');
             } else {
                 const { error } = await crearLibro({
-                    ...newLibro,
-                    paginas: parseInt(newLibro.paginas) || 0,
-                    cantidad: parseInt(newLibro.cantidad) || 1,
-                    disponible: true
+                    ...libroPayload,
+                    disponible: parseInt(newLibro.cantidad) > 0 || true
                 });
                 if (error) throw error;
                 alert('✅ Libro añadido');
@@ -369,12 +370,19 @@ export default function AdminClient({ user }) {
                                         <option value="Devocionales">Devocionales</option>
                                         <option value="Biografías">Biografías</option>
                                     </select>
+                                    <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Nº Páginas" />
                                     <input type="number" className={styles.input} value={newLibro.cantidad} onChange={e => setNewLibro({...newLibro, cantidad: e.target.value})} placeholder="Stock" min="0" />
                                 </div>
-                                <input className={styles.input} value={newLibro.imagen_url} onChange={e => setNewLibro({...newLibro, imagen_url: e.target.value})} placeholder="URL Imagen Portada" />
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <button type="submit" className={styles.submitBtn} disabled={guardandoLibro}>{editingLibroId ? 'Actualizar' : 'Guardar'}</button>
-                                    {editingLibroId && <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',categoria:'Teología',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
+                                <input className={styles.input} value={newLibro.imagen_url} onChange={e => setNewLibro({...newLibro, imagen_url: e.target.value})} placeholder="URL de la Imagen de Portada" />
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                    <button type="submit" className={styles.submitBtn} disabled={guardandoLibro} style={{ flex: 2 }}>
+                                        {guardandoLibro ? 'Guardando...' : editingLibroId ? '💾 Actualizar Libro' : '💾 Guardar Libro'}
+                                    </button>
+                                    {editingLibroId && (
+                                        <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',categoria:'Teología',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d', flex: 1}}>
+                                            Cancelar
+                                        </button>
+                                    )}
                                 </div>
                             </form>
                         </div>
