@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { 
-    getCurrentUser, 
     signOut, 
-    devolverLibro, 
     eliminarReserva,
     getLibros,
     crearLibro,
@@ -25,7 +23,7 @@ export default function AdminClient({ user }) {
     const [articulos, setArticulos] = useState([]);
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('reservas'); // reservas, articulos, libros
+    const [activeTab, setActiveTab] = useState('reservas');
     
     // Estados para Libros
     const [newLibro, setNewLibro] = useState({ 
@@ -48,108 +46,61 @@ export default function AdminClient({ user }) {
     const router = useRouter();
 
     useEffect(() => {
-        if (activeTab === 'reservas') {
-            fetchReservas();
-        } else if (activeTab === 'articulos') {
-            fetchArticulos();
-        } else {
-            fetchLibros();
-        }
+        if (activeTab === 'reservas') fetchReservas();
+        else if (activeTab === 'articulos') fetchArticulos();
+        else fetchLibros();
     }, [activeTab]);
 
     async function fetchReservas() {
         setLoading(true);
         try {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) return;
-
             const response = await fetch('/api/admin/reservas', {
                 headers: { 'Authorization': `Bearer ${session.access_token}` }
             });
-
-            if (!response.ok) throw new Error('Error al obtener reservas');
             const { data } = await response.json();
             setReservas(data || []);
-        } catch (error) {
-            console.error('Error fetching reservas:', error);
-        } finally {
-            setLoading(false);
-        }
+        } catch (error) { console.error(error); } finally { setLoading(false); }
     }
 
     async function fetchArticulos() {
         setLoading(true);
         try {
-            const { data, error } = await getArticulos();
-            if (error) throw error;
+            const { data } = await getArticulos();
             setArticulos(data || []);
-        } catch (error) {
-            console.error('Error fetching articulos:', error);
-        } finally {
-            setLoading(false);
-        }
+        } catch (error) { console.error(error); } finally { setLoading(false); }
     }
 
     async function fetchLibros() {
         setLoading(true);
         try {
-            const { data, error } = await getLibros();
-            if (error) throw error;
-            if (data && data.length > 0) {
-                console.log('Estructura del primer libro:', data[0]);
-            }
+            const { data } = await getLibros();
             setLibros(data || []);
-        } catch (error) {
-            console.error('Error fetching libros:', error);
-        } finally {
-            setLoading(false);
-        }
+        } catch (error) { console.error(error); } finally { setLoading(false); }
     }
 
-    // Handlers para Artículos
     const handleCrearArticulo = async (e) => {
         e.preventDefault();
-        if (!newArticulo.titulo || !newArticulo.contenido) {
-            alert('Por favor completa el título y el contenido');
-            return;
-        }
         setPublicando(true);
         try {
-            const { error } = await crearArticulo(newArticulo);
-            if (error) throw error;
-            alert('✅ Artículo publicado con éxito');
+            await crearArticulo(newArticulo);
             setNewArticulo({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
             fetchArticulos();
-        } catch (error) {
-            console.error('Error al publicar:', error);
-            alert('❌ Error al publicar el artículo');
-        } finally {
-            setPublicando(false);
-        }
+        } catch (error) { alert(error.message); } finally { setPublicando(false); }
     };
 
     const handleEliminarArticulo = async (id) => {
-        if (!confirm('¿Estás seguro de eliminar este artículo?')) return;
-        try {
-            const { error } = await eliminarArticulo(id);
-            if (error) throw error;
+        if (confirm('¿Eliminar artículo?')) {
+            await eliminarArticulo(id);
             fetchArticulos();
-        } catch (error) {
-            console.error('Error al eliminar:', error);
         }
     };
 
-    // Handlers para Libros
     const handleCrearLibro = async (e) => {
         e.preventDefault();
-        if (!newLibro.titulo || !newLibro.autor) {
-            alert('Título y Autor son obligatorios');
-            return;
-        }
-
         setGuardandoLibro(true);
         try {
-            const libroPayload = {
+            const payload = {
                 ...newLibro,
                 paginas: parseInt(newLibro.paginas) || 0,
                 cantidad: parseInt(newLibro.cantidad) || 0,
@@ -157,22 +108,18 @@ export default function AdminClient({ user }) {
             };
 
             if (editingLibroId) {
-                const { error } = await actualizarLibro(editingLibroId, libroPayload);
+                const { error } = await actualizarLibro(editingLibroId, payload);
                 if (error) throw error;
-                alert('✅ Libro actualizado');
+                alert('✅ Actualizado');
             } else {
-                const { error } = await crearLibro(libroPayload);
+                const { error } = await crearLibro(payload);
                 if (error) throw error;
-                alert('✅ Libro añadido');
+                alert('✅ Guardado');
             }
             setNewLibro({ titulo: '', autor: '', categoria: 'Teología', paginas: '', cantidad: 1, imagen_url: '', disponible: true });
             setEditingLibroId(null);
             fetchLibros();
-        } catch (error) {
-            alert('❌ Error: ' + error.message);
-        } finally {
-            setGuardandoLibro(false);
-        }
+        } catch (error) { alert('Error: ' + error.message); } finally { setGuardandoLibro(false); }
     };
 
     const prepareEditLibro = (libro) => {
@@ -190,13 +137,9 @@ export default function AdminClient({ user }) {
     };
 
     const handleEliminarLibro = async (id) => {
-        if (!confirm('¿Eliminar este libro?')) return;
-        try {
-            const { error } = await eliminarLibro(id);
-            if (error) throw error;
+        if (confirm('¿Eliminar libro?')) {
+            await eliminarLibro(id);
             fetchLibros();
-        } catch (error) {
-            alert('❌ Error al eliminar');
         }
     };
 
@@ -205,73 +148,12 @@ export default function AdminClient({ user }) {
         router.push('/');
     };
 
-    const generateMonthlyReport = async () => {
-        if (!confirm('¿Generar reporte mensual?')) return;
-        try {
-            const response = await fetch('/api/monthly-report', {
-                headers: { 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || 'test'}` }
-            });
-            if (!response.ok) throw new Error('Error al generar reporte');
-            alert('✅ Reporte generado y enviado');
-        } catch (error) {
-            alert('❌ ' + error.message);
-        }
-    };
-
-    const handleSendReminder = async (reservaId) => {
-        if (!confirm('¿Enviar recordatorio?')) return;
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            const response = await fetch('/api/admin/send-reminder', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-                body: JSON.stringify({ reservaId })
-            });
-            if (!response.ok) throw new Error('Error al enviar');
-            alert('✅ Recordatorio enviado');
-        } catch (error) {
-            alert('❌ ' + error.message);
-        }
-    };
-
-    const handleEliminarReservaAdmin = async (reservaId, libroId) => {
-        if (!confirm('¿Eliminar esta reserva?')) return;
-        try {
-            const { error } = await eliminarReserva(reservaId, libroId);
-            if (error) throw error;
-            fetchReservas();
-        } catch (error) {
-            alert('❌ Error al eliminar');
-        }
-    };
-
-    // Utils para Render
-    const getDaysRemaining = (vencimiento, createdAt, paginas) => {
-        const dueDate = vencimiento ? new Date(vencimiento) : new Date(new Date(createdAt).setDate(new Date(createdAt).getDate() + (paginas < 100 ? 3 : 14)));
-        const diff = Math.ceil((dueDate - new Date()) / (1000 * 60 * 60 * 24));
-        return diff;
-    };
-
-    const getStatusColor = (days) => {
-        if (days < 0) return '#dc3545';
-        if (days <= 3) return '#ffc107';
-        return '#28a745';
-    };
-
     return (
         <div className={styles.pageContainer}>
             <Navbar user={user} onLogout={handleLogout} />
             <div className={styles.container}>
                 <div className={styles.adminHeader}>
-                    <div>
-                        <h1 className={styles.title}>Panel de Administración</h1>
-                        <p className={styles.subtitle}>Gestión integral de la Iglesia</p>
-                    </div>
-                    {activeTab === 'reservas' && (
-                        <button onClick={generateMonthlyReport} className={styles.reportBtn}>
-                            📊 Reporte Mensual
-                        </button>
-                    )}
+                    <h1 className={styles.title}>Administración</h1>
                 </div>
 
                 <div className={styles.tabs}>
@@ -282,51 +164,21 @@ export default function AdminClient({ user }) {
 
                 {activeTab === 'reservas' ? (
                     <div className={styles.tableSection}>
-                        <div className={styles.filterContainer}>
-                            <button className={`${styles.filterBtn} ${filter === 'todas' ? styles.active : ''}`} onClick={() => setFilter('todas')}>Todas</button>
-                            <button className={`${styles.filterBtn} ${filter === 'activas' ? styles.active : ''}`} onClick={() => setFilter('activas')}>Activas</button>
-                            <button className={`${styles.filterBtn} ${filter === 'devueltas' ? styles.active : ''}`} onClick={() => setFilter('devueltas')}>Devueltas</button>
-                        </div>
-                        {loading ? <div className={styles.loading}>Cargando...</div> : (
+                        {loading ? <div>Cargando...</div> : (
                             <div className={styles.tableContainer}>
                                 <table className={styles.table}>
-                                    <thead>
-                                        <tr>
-                                            <th>Usuario</th>
-                                            <th>Libro</th>
-                                            <th>Vencimiento</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
+                                    <thead><tr><th>Usuario</th><th>Libro</th><th>Estado</th><th>Acciones</th></tr></thead>
                                     <tbody>
-                                        {reservas.filter(r => filter === 'todas' || r.estado === (filter === 'activas' ? 'activa' : 'devuelto')).map(res => {
-                                            const days = getDaysRemaining(res.fecha_vencimiento, res.created_at, res.libros?.paginas);
-                                            return (
-                                                <tr key={res.id}>
-                                                    <td>{res.usuario?.nombre || 'Usuario'}</td>
-                                                    <td>{res.libros?.titulo}</td>
-                                                    <td>
-                                                        {res.estado === 'activa' ? (
-                                                            <span style={{ color: getStatusColor(days) }}>{days > 0 ? `${days} días` : 'Atrasado'}</span>
-                                                        ) : 'Devuelto'}
-                                                    </td>
-                                                    <td>
-                                                        <span className={`${styles.badge} ${res.estado === 'activa' ? styles.badgeActive : styles.badgeReturned}`}>
-                                                            {res.estado === 'activa' ? 'Activa' : 'Devuelto'}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        {res.estado === 'activa' && (
-                                                            <div className={styles.actionButtons}>
-                                                                <button onClick={() => handleSendReminder(res.id)} className={styles.btnReminder}><i className="bi bi-envelope"></i></button>
-                                                                <button onClick={() => handleEliminarReservaAdmin(res.id, res.libro_id)} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                                        {reservas.map(res => (
+                                            <tr key={res.id}>
+                                                <td>{res.usuario?.nombre}</td>
+                                                <td>{res.libros?.titulo}</td>
+                                                <td>{res.estado}</td>
+                                                <td>
+                                                    <button onClick={() => { if(confirm('¿Eliminar?')) eliminarReserva(res.id, res.libro_id).then(()=>fetchReservas()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -335,53 +187,30 @@ export default function AdminClient({ user }) {
                 ) : activeTab === 'articulos' ? (
                     <div className={styles.articlesSection}>
                         <div className={styles.formSection}>
-                            <h2>📝 Nuevo Artículo</h2>
                             <form onSubmit={handleCrearArticulo}>
                                 <input className={styles.input} value={newArticulo.titulo} onChange={e => setNewArticulo({...newArticulo, titulo: e.target.value})} placeholder="Título" required />
                                 <textarea className={styles.textarea} value={newArticulo.contenido} onChange={e => setNewArticulo({...newArticulo, contenido: e.target.value})} placeholder="Contenido" required />
-                                <button type="submit" className={styles.submitBtn} disabled={publicando}>{publicando ? 'Publicando...' : 'Publicar'}</button>
+                                <button type="submit" className={styles.submitBtn}>{publicando ? '...' : 'Publicar'}</button>
                             </form>
-                        </div>
-                        <div className={styles.listSection}>
-                            {articulos.map(art => (
-                                <div key={art.id} className={styles.articleCard}>
-                                    <h3>{art.titulo}</h3>
-                                    <button onClick={() => handleEliminarArticulo(art.id)} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 ) : (
                     <div className={styles.articlesSection}>
                         <div className={styles.formSection}>
-                            <h2>{editingLibroId ? '✏️ Editar Libro' : '📚 Nuevo Libro'}</h2>
+                            <h2>{editingLibroId ? '✏️ Editar' : '📚 Nuevo Libro'}</h2>
                             <form onSubmit={handleCrearLibro}>
                                 <div className={styles.formRow}>
                                     <input className={styles.input} value={newLibro.titulo} onChange={e => setNewLibro({...newLibro, titulo: e.target.value})} placeholder="Título" required />
                                     <input className={styles.input} value={newLibro.autor} onChange={e => setNewLibro({...newLibro, autor: e.target.value})} placeholder="Autor" required />
                                 </div>
                                 <div className={styles.formRow}>
-                                    <select className={styles.input} value={newLibro.categoria} onChange={e => setNewLibro({...newLibro, categoria: e.target.value})}>
-                                        <option value="Teología">Teología</option>
-                                        <option value="Apologética">Apologética</option>
-                                        <option value="Ficción Cristiana">Ficción Cristiana</option>
-                                        <option value="Historia">Historia</option>
-                                        <option value="Devocionales">Devocionales</option>
-                                        <option value="Biografías">Biografías</option>
-                                    </select>
-                                    <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Nº Páginas" />
+                                    <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Páginas" />
                                     <input type="number" className={styles.input} value={newLibro.cantidad} onChange={e => setNewLibro({...newLibro, cantidad: e.target.value})} placeholder="Stock" min="0" />
                                 </div>
-                                <input className={styles.input} value={newLibro.imagen_url} onChange={e => setNewLibro({...newLibro, imagen_url: e.target.value})} placeholder="URL de la Imagen de Portada" />
-                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                                    <button type="submit" className={styles.submitBtn} disabled={guardandoLibro} style={{ flex: 2 }}>
-                                        {guardandoLibro ? 'Guardando...' : editingLibroId ? '💾 Actualizar Libro' : '💾 Guardar Libro'}
-                                    </button>
-                                    {editingLibroId && (
-                                        <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',categoria:'Teología',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d', flex: 1}}>
-                                            Cancelar
-                                        </button>
-                                    )}
+                                <input className={styles.input} value={newLibro.imagen_url} onChange={e => setNewLibro({...newLibro, imagen_url: e.target.value})} placeholder="URL Imagen Portada" />
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <button type="submit" className={styles.submitBtn} disabled={guardandoLibro}>{editingLibroId ? 'Actualizar' : 'Guardar'}</button>
+                                    {editingLibroId && <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',categoria:'Teología',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
                                 </div>
                             </form>
                         </div>
@@ -393,11 +222,14 @@ export default function AdminClient({ user }) {
                                         {libros.map(libro => (
                                             <tr key={libro.id}>
                                                 <td>
-                                                    {libro.imagen_url ? (
-                                                        <img src={libro.imagen_url} alt="Portada" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
-                                                    ) : (
-                                                        <div style={{ width: '40px', height: '60px', backgroundColor: '#eee', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#999' }}>Sin foto</div>
-                                                    )}
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                        {libro.imagen_url ? (
+                                                            <>
+                                                                <img src={libro.imagen_url} alt="P" style={{ width: '40px', height: '60px', objectFit: 'cover' }} />
+                                                                <span style={{ fontSize: '8px', maxWidth: '60px', overflow: 'hidden' }}>{libro.imagen_url.substring(0,15)}...</span>
+                                                            </>
+                                                        ) : 'Sin foto'}
+                                                    </div>
                                                 </td>
                                                 <td>{libro.titulo}</td>
                                                 <td>{libro.cantidad}</td>
