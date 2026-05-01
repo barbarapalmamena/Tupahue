@@ -10,9 +10,11 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    min-height: 80px;
+    min-height: 70px;
     padding: 0.5rem 1.5rem;
     background-color: #3c4d6b;
+    display: flex;
+    align-items: center;
 }
 
 .navbarContainer {
@@ -30,7 +32,7 @@
 }
 
 .logoNavbar {
-    height: 150px;
+    height: 80px;
     width: auto;
     object-fit: contain;
 }
@@ -106,7 +108,11 @@
 }
 
 .navLink.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: transparent;
+    font-weight: 800;
+    color: #ffffff;
+    border-bottom: 2px solid white;
+    border-radius: 0;
 }
 
 /* ===== BOTÓN LOGIN EN NAVBAR ===== */
