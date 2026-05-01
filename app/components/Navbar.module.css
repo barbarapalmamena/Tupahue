@@ -91,10 +91,12 @@
 .navLink {
     color: white;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
     transition: all 0.3s ease;
-    border-radius: 4px;
-    display: block;
+    border-radius: 6px;
     font-weight: 500;
 }
 
@@ -131,7 +133,7 @@
     background-color: #dc3545;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 0 18px;
     height: 38px;
     font-weight: 600;
@@ -153,7 +155,7 @@
     background-color: #6c757d !important;
     color: white !important;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 0 18px;
     height: 38px;
     font-weight: 600;
