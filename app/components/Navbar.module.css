@@ -111,8 +111,8 @@
 
 /* ===== BOTÓN LOGIN EN NAVBAR ===== */
 .btnLogin {
-    background-color: #5a6a85;
     color: white;
+    background-color: transparent;
     border-radius: 6px;
     padding: 0 1rem;
     height: 38px;
@@ -127,13 +127,13 @@
 }
 
 .btnLogin:hover {
-    background-color: #6a7a95;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== BOTÓN LOGOUT EN NAVBAR ===== */
 .btnLogout {
-    background-color: #5a6a85;
     color: white;
+    background-color: transparent;
     border: none;
     border-radius: 6px;
     padding: 0 1rem;
@@ -149,13 +149,13 @@
 }
 
 .btnLogout:hover {
-    background-color: #6a7a95;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== BOTÓN ADMIN EN NAVBAR ===== */
 .btnAdmin {
-    background-color: #5a6a85 !important;
     color: white !important;
+    background-color: transparent !important;
     border: none;
     border-radius: 6px;
     padding: 0 1rem;
@@ -172,7 +172,7 @@
 }
 
 .btnAdmin:hover {
-    background-color: #6a7a95 !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* ===== RESPONSIVE ===== */
