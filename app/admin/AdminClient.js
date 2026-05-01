@@ -95,6 +95,9 @@ export default function AdminClient({ user }) {
         try {
             const { data, error } = await getLibros();
             if (error) throw error;
+            if (data && data.length > 0) {
+                console.log('Estructura del primer libro:', data[0]);
+            }
             setLibros(data || []);
         } catch (error) {
             console.error('Error fetching libros:', error);
@@ -385,10 +388,17 @@ export default function AdminClient({ user }) {
                         <div className={styles.listSection}>
                             <div className={styles.tableContainer}>
                                 <table className={styles.table}>
-                                    <thead><tr><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
+                                    <thead><tr><th>Portada</th><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
                                     <tbody>
                                         {libros.map(libro => (
                                             <tr key={libro.id}>
+                                                <td>
+                                                    {libro.imagen_url ? (
+                                                        <img src={libro.imagen_url} alt="Portada" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
+                                                    ) : (
+                                                        <div style={{ width: '40px', height: '60px', backgroundColor: '#eee', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#999' }}>Sin foto</div>
+                                                    )}
+                                                </td>
                                                 <td>{libro.titulo}</td>
                                                 <td>{libro.cantidad}</td>
                                                 <td>
