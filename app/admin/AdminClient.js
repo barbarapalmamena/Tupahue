@@ -150,8 +150,7 @@ export default function AdminClient({ user }) {
                 ...newLibro,
                 paginas: parseInt(newLibro.paginas) || 0,
                 cantidad: parseInt(newLibro.cantidad) || 0,
-                disponible: parseInt(newLibro.cantidad) > 0,
-                imagen: newLibro.imagen_url // Compatibilidad con columna 'imagen'
+                disponible: parseInt(newLibro.cantidad) > 0
             };
 
             if (editingLibroId) {
@@ -159,10 +158,7 @@ export default function AdminClient({ user }) {
                 if (error) throw error;
                 alert('✅ Libro actualizado');
             } else {
-                const { error } = await crearLibro({
-                    ...libroPayload,
-                    disponible: parseInt(newLibro.cantidad) > 0 || true
-                });
+                const { error } = await crearLibro(libroPayload);
                 if (error) throw error;
                 alert('✅ Libro añadido');
             }
