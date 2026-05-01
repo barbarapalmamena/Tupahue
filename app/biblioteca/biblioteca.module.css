@@ -386,7 +386,7 @@
 
 @media (max-width: 767.98px) {
     .logoNavbar {
-        height: 50px;
+        height: 100px;
     }
 
     .navbarToggler {
@@ -426,7 +426,7 @@
     }
 
     .pageContainer {
-        padding-top: 70px;
+        padding-top: 150px;
     }
 
     .mainContainer {
