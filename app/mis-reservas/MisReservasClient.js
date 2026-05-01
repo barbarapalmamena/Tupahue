@@ -67,22 +67,24 @@ export default function MisReservasClient() {
         router.push('/');
     };
 
-    const calcularDiasRestantes = (fechaReserva, paginas) => {
-        const fecha = new Date(fechaReserva);
-        const fechaDevolucion = new Date(fecha);
-
-        // Determinar días de préstamo según cantidad de páginas (consistente con Admin y Biblioteca)
-        const diasPrestamo = paginas < 100 ? 7 : 14;
-        fechaDevolucion.setDate(fecha.getDate() + diasPrestamo);
+    const calcularDiasRestantes = (fechaVencimientoDB, fechaReserva, paginas) => {
+        // Usar la fecha de la base de datos si existe, si no, calcularla
+        const fechaVencimiento = fechaVencimientoDB 
+            ? new Date(fechaVencimientoDB) 
+            : (() => {
+                const f = new Date(fechaReserva);
+                f.setDate(f.getDate() + (paginas < 100 ? 3 : 14));
+                return f;
+            })();
 
         const hoy = new Date();
-        const diferencia = fechaDevolucion - hoy;
+        const diferencia = fechaVencimiento - hoy;
         const diasRestantes = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
 
         return {
             dias: diasRestantes,
-            fechaDevolucion: fechaDevolucion.toLocaleDateString('es-CL'),
-            diasPrestamo: diasPrestamo
+            fechaDevolucion: fechaVencimiento.toLocaleDateString('es-CL'),
+            diasPrestamo: paginas < 100 ? 3 : 14
         };
     };
 
@@ -122,7 +124,7 @@ export default function MisReservasClient() {
                             {reservasActivas.length > 0 ? (
                                 <div className={styles.reservasGrid}>
                                     {reservasActivas.map(reserva => {
-                                        const { dias, fechaDevolucion, diasPrestamo } = calcularDiasRestantes(reserva.created_at, reserva.libros?.paginas);
+                                        const { dias, fechaDevolucion, diasPrestamo } = calcularDiasRestantes(reserva.fecha_vencimiento, reserva.created_at, reserva.libros?.paginas);
                                         const esUrgente = dias <= 3;
                                         const estaAtrasado = dias < 0;
 
