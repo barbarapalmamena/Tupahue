@@ -157,7 +157,8 @@ export default function BibliotecaClient() {
                                                 className={styles.cardImage}
                                                 alt={libro.titulo}
                                                 width={300}
-                                                height={220}
+                                                height={400}
+                                                priority={true}
                                             />
                                         ) : (
                                             <div className={styles.placeholderImage}>
