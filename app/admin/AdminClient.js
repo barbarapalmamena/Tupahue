@@ -140,13 +140,17 @@ export default function AdminClient({ user }) {
         setGuardandoLibro(true);
         try {
             const { crearLibro } = await import('@/lib/supabase');
-            const { error } = await crearLibro({
+            const { data, error } = await crearLibro({
                 ...newLibro,
                 paginas: parseInt(newLibro.paginas) || 0,
                 cantidad: parseInt(newLibro.cantidad) || 1,
                 disponible: true
             });
-            if (error) throw error;
+
+            if (error) {
+                alert(`❌ Error de Base de Datos: ${error.message}`);
+                return;
+            }
 
             alert('✅ Libro añadido con éxito');
             setNewLibro({ titulo: '', autor: '', categoria: 'Teología', paginas: '', cantidad: 1, imagen_url: '', disponible: true });
