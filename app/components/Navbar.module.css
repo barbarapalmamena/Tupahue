@@ -146,20 +146,21 @@
 
 /* ===== BOTÓN ADMIN EN NAVBAR ===== */
 .btnAdmin {
-    background-color: #6f42c1;
+    background-color: #6f42c1 !important;
     color: white !important;
     border-radius: 8px;
     padding: 6px 18px;
     font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
 }
 
 .btnAdmin:hover {
-    background-color: #5a32a3;
+    background-color: #5a32a3 !important;
     transform: translateY(-2px);
     color: white !important;
+    box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
 }
 
 /* ===== RESPONSIVE ===== */
