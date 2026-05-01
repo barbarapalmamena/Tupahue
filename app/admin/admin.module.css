@@ -1,15 +1,17 @@
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .pageContainer {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding-top: 180px;
-    padding-bottom: 3rem;
 }
 
 .container {
+    flex: 1;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 2rem 3rem 2rem;
 }
 
 .adminHeader {
