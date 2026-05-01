@@ -130,7 +130,7 @@
 
 /* ===== BOTÓN LOGOUT EN NAVBAR ===== */
 .btnLogout {
-    background-color: #dc3545;
+    background-color: #5a6a85;
     color: white;
     border: none;
     border-radius: 6px;
@@ -146,7 +146,7 @@
 }
 
 .btnLogout:hover {
-    background-color: #c82333;
+    background-color: #6a7a95;
     transform: translateY(-2px);
 }
 
