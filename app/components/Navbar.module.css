@@ -111,21 +111,23 @@
 
 /* ===== BOTÓN LOGIN EN NAVBAR ===== */
 .btnLogin {
-    background-color: #ffc107;
-    color: #000;
-    border-radius: 8px;
-    padding: 6px 18px;
+    background-color: #5a6a85;
+    color: white;
+    border-radius: 6px;
+    padding: 0 18px;
+    height: 38px;
     font-weight: 600;
     transition: all 0.3s ease, transform 0.2s ease;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-left: 0.5rem;
 }
 
 .btnLogin:hover {
-    background-color: #e0a800;
+    background-color: #6a7a95;
     transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== BOTÓN LOGOUT EN NAVBAR ===== */
