@@ -117,7 +117,7 @@ export default function Navbar({ user, onLogout }) {
                                 )}
                                 <li className={styles.navItem}>
                                     <button
-                                        className={styles.navLink}
+                                        className={styles.btnLogout}
                                         onClick={onLogout}
                                     >
                                         Cerrar Sesión
