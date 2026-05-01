@@ -107,14 +107,14 @@ export default function Navbar({ user, onLogout }) {
                             <>
                                 {/* Mostrar botón Admin solo para administradores (rol en DB o metadata) */}
                                 {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
-                                    <li className={styles.navItem}>
-                                        <Link
-                                            className={`${styles.navLink} ${styles.btnAdmin} ${pathname === '/admin' ? styles.active : ''}`}
-                                            href="/admin"
-                                        >
-                                            Admin
-                                        </Link>
-                                    </li>
+                                        <li className={styles.navItem}>
+                                            <Link
+                                                className={styles.btnAdmin}
+                                                href="/admin"
+                                            >
+                                                Admin
+                                            </Link>
+                                        </li>
                                 )}
                                 {userRole !== 'admin' && user.user_metadata?.role !== 'admin' && (
                                     <li className={styles.navItem}>
