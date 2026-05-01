@@ -116,6 +116,62 @@ export default function AdminClient({ user }) {
         }
     };
 
+    async function fetchLibros() {
+        setLoading(true);
+        try {
+            const { getLibros } = await import('@/lib/supabase');
+            const { data, error } = await getLibros();
+            if (error) throw error;
+            setLibros(data || []);
+        } catch (error) {
+            console.error('Error fetching libros:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleCrearLibro = async (e) => {
+        e.preventDefault();
+        if (!newLibro.titulo || !newLibro.autor) {
+            alert('Título y Autor son obligatorios');
+            return;
+        }
+
+        setGuardandoLibro(true);
+        try {
+            const { crearLibro } = await import('@/lib/supabase');
+            const { error } = await crearLibro({
+                ...newLibro,
+                paginas: parseInt(newLibro.paginas) || 0,
+                cantidad: parseInt(newLibro.cantidad) || 1,
+                disponible: true
+            });
+            if (error) throw error;
+
+            alert('✅ Libro añadido con éxito');
+            setNewLibro({ titulo: '', autor: '', categoria: 'Teología', paginas: '', cantidad: 1, imagen_url: '', disponible: true });
+            fetchLibros();
+        } catch (error) {
+            console.error('Error al crear libro:', error);
+            alert('❌ Error al añadir el libro');
+        } finally {
+            setGuardandoLibro(false);
+        }
+    };
+
+    const handleEliminarLibro = async (id) => {
+        if (!confirm('¿Estás seguro de eliminar este libro del catálogo?')) return;
+        try {
+            const { eliminarLibro } = await import('@/lib/supabase');
+            const { error } = await eliminarLibro(id);
+            if (error) throw error;
+            fetchLibros();
+        } catch (error) {
+            console.error('Error al eliminar libro:', error);
+            alert('❌ Error al eliminar');
+        }
+    };
+
     const handleLogout = async () => {
         await signOut();
         router.push('/');
