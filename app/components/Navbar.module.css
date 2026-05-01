@@ -132,11 +132,15 @@
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 6px 18px;
+    padding: 0 18px;
+    height: 38px;
     font-weight: 600;
     transition: all 0.3s ease, transform 0.2s ease;
     cursor: pointer;
     margin-left: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btnLogout:hover {
@@ -150,13 +154,15 @@
     color: white !important;
     border: none;
     border-radius: 8px;
-    padding: 6px 18px;
+    padding: 0 18px;
+    height: 38px;
     font-weight: 600;
     transition: all 0.3s ease, transform 0.2s ease;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-left: 0.5rem;
-    line-height: normal;
     cursor: pointer;
 }
 
