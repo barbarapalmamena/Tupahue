@@ -21,6 +21,13 @@ export default function LoginClient() {
     const [rememberMe, setRememberMe] = useState(false);
 
     useEffect(() => {
+        // Cargar email guardado si existe
+        const savedEmail = localStorage.getItem('tupahue_remember_email');
+        if (savedEmail) {
+            setFormData(prev => ({ ...prev, email: savedEmail }));
+            setRememberMe(true);
+        }
+
         // Verificar si ya hay un usuario logueado
         const checkUser = async () => {
             const user = await getCurrentUser();
@@ -55,6 +62,13 @@ export default function LoginClient() {
             if (error) {
                 setError('Email o contraseña incorrectos');
             } else {
+                // Gestionar "Recordarme" (guardar email)
+                if (rememberMe) {
+                    localStorage.setItem('tupahue_remember_email', formData.email);
+                } else {
+                    localStorage.removeItem('tupahue_remember_email');
+                }
+                
                 // Redirigir a biblioteca
                 router.push('/biblioteca');
             }
