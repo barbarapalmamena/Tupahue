@@ -222,14 +222,11 @@ export default function AdminClient({ user }) {
                                         {libros.map(libro => (
                                             <tr key={libro.id}>
                                                 <td>
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                        {libro.imagen_url ? (
-                                                            <>
-                                                                <img src={libro.imagen_url} alt="P" style={{ width: '40px', height: '60px', objectFit: 'cover' }} />
-                                                                <span style={{ fontSize: '8px', maxWidth: '60px', overflow: 'hidden' }}>{libro.imagen_url.substring(0,15)}...</span>
-                                                            </>
-                                                        ) : 'Sin foto'}
-                                                    </div>
+                                                    {libro.imagen_url ? (
+                                                        <img src={libro.imagen_url} alt="Portada" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
+                                                    ) : (
+                                                        <div style={{ width: '40px', height: '60px', backgroundColor: '#eee', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#999' }}>Sin foto</div>
+                                                    )}
                                                 </td>
                                                 <td>{libro.titulo}</td>
                                                 <td>{libro.cantidad}</td>
