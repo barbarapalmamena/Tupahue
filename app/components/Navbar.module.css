@@ -148,19 +148,19 @@
 .btnAdmin {
     background-color: #6c757d !important;
     color: white !important;
-    border-radius: 8px;
-    padding: 6px 18px;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    line-height: 1.5;
 }
 
 .btnAdmin:hover {
     background-color: #5a6268 !important;
-    transform: translateY(-2px);
     color: white !important;
-    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+    box-shadow: none;
 }
 
 /* ===== RESPONSIVE ===== */
