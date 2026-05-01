@@ -36,106 +36,102 @@ export default function Navbar({ user, onLogout }) {
 
     return (
         <nav className={styles.navbar}>
-            <div className={styles.headerTop}>
+            <div className={styles.navbarContainer}>
                 <Link href="/" className={styles.navbarBrand}>
                     <Image
                         src="/img/LogoTupahue.png"
                         className={styles.logoNavbar}
                         alt="Logo Iglesia Tupahue"
-                        width={250}
-                        height={250}
+                        width={150}
+                        height={150}
                         priority
                     />
                 </Link>
-            </div>
 
-            <div className={styles.headerBottom}>
-                <div className={styles.navbarContainer}>
-                    <button
-                        className={styles.navbarToggler}
-                        type="button"
-                        id="navbarToggle"
-                        onClick={toggleMenu}
-                        aria-label="Toggle navigation"
-                    >
-                        <span className={styles.navbarTogglerIcon}></span>
-                    </button>
+                <button
+                    className={styles.navbarToggler}
+                    type="button"
+                    id="navbarToggle"
+                    onClick={toggleMenu}
+                    aria-label="Toggle navigation"
+                >
+                    <span className={styles.navbarTogglerIcon}></span>
+                </button>
 
-                    <div
-                        className={`${styles.navbarCollapse} ${isMenuOpen ? styles.show : ''}`}
-                        id="navbarNav"
-                    >
-                        <ul className={styles.navbarNav}>
-                            <li className={styles.navItem}>
-                                <Link
-                                    className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}
-                                    href="/"
-                                >
-                                    Inicio
-                                </Link>
-                            </li>
-                            <li className={styles.navItem}>
-                                <Link
-                                    className={`${styles.navLink} ${pathname === '/actividades' ? styles.active : ''}`}
-                                    href="/actividades"
-                                >
-                                    Actividades
-                                </Link>
-                            </li>
-                            <li className={styles.navItem}>
-                                <Link
-                                    className={`${styles.navLink} ${pathname === '/nosotros' ? styles.active : ''}`}
-                                    href="/nosotros"
-                                >
-                                    Nosotros
-                                </Link>
-                            </li>
-                            <li className={styles.navItem}>
-                                <Link
-                                    className={`${styles.navLink} ${pathname === '/ministerios' ? styles.active : ''}`}
-                                    href="/ministerios"
-                                >
-                                    Ministerios
-                                </Link>
-                            </li>
-                            <li className={styles.navItem}>
-                                <Link
-                                    className={`${styles.navLink} ${pathname === '/biblioteca' ? styles.active : ''}`}
-                                    href="/biblioteca"
-                                >
-                                    Biblioteca
-                                </Link>
-                            </li>
-                            {user ? (
-                                <>
-                                    {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
-                                        <li className={styles.navItem}>
-                                            <Link
-                                                className={`${styles.navLink} ${pathname === '/admin' ? styles.active : ''}`}
-                                                href="/admin"
-                                            >
-                                                Panel
-                                            </Link>
-                                        </li>
-                                    )}
+                <div
+                    className={`${styles.navbarCollapse} ${isMenuOpen ? styles.show : ''}`}
+                    id="navbarNav"
+                >
+                    <ul className={styles.navbarNav}>
+                        <li className={styles.navItem}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/' ? styles.active : ''}`}
+                                href="/"
+                            >
+                                Inicio
+                            </Link>
+                        </li>
+                        <li className={styles.navItem}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/actividades' ? styles.active : ''}`}
+                                href="/actividades"
+                            >
+                                Actividades
+                            </Link>
+                        </li>
+                        <li className={styles.navItem}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/nosotros' ? styles.active : ''}`}
+                                href="/nosotros"
+                            >
+                                Nosotros
+                            </Link>
+                        </li>
+                        <li className={styles.navItem}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/ministerios' ? styles.active : ''}`}
+                                href="/ministerios"
+                            >
+                                Ministerios
+                            </Link>
+                        </li>
+                        <li className={styles.navItem}>
+                            <Link
+                                className={`${styles.navLink} ${pathname === '/biblioteca' ? styles.active : ''}`}
+                                href="/biblioteca"
+                            >
+                                Biblioteca
+                            </Link>
+                        </li>
+                        {user ? (
+                            <>
+                                {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
                                     <li className={styles.navItem}>
-                                        <button
-                                            className={styles.navLink}
-                                            onClick={onLogout}
+                                        <Link
+                                            className={`${styles.navLink} ${pathname === '/admin' ? styles.active : ''}`}
+                                            href="/admin"
                                         >
-                                            Cerrar Sesión
-                                        </button>
+                                            Panel
+                                        </Link>
                                     </li>
-                                </>
-                            ) : (
+                                )}
                                 <li className={styles.navItem}>
-                                    <Link className={styles.navLink} href="/login">
-                                        Iniciar Sesión
-                                    </Link>
+                                    <button
+                                        className={styles.navLink}
+                                        onClick={onLogout}
+                                    >
+                                        Cerrar Sesión
+                                    </button>
                                 </li>
-                            )}
-                        </ul>
-                    </div>
+                            </>
+                        ) : (
+                            <li className={styles.navItem}>
+                                <Link className={styles.navLink} href="/login">
+                                    Iniciar Sesión
+                                </Link>
+                            </li>
+                        )}
+                    </ul>
                 </div>
             </div>
         </nav>
