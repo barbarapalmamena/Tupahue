@@ -1,0 +1,235 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.pageContainer {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding-top: 100px;
+    text-align: center;
+}
+
+/* ===== HERO ===== */
+.hero {
+    height: 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== CONTENEDOR GENERAL ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ===== TÍTULOS ===== */
+.mainTitle {
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.sectionTitle {
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+}
+
+.subtitle {
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.sectionSubtitle {
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #333;
+    text-align: left;
+}
+
+/* ===== SECCIONES ===== */
+.misionVisionSection {
+    padding: 5rem 1rem;
+    background-color: white;
+}
+
+.creenciasSection {
+    padding: 5rem 1rem;
+    background-color: #f8f9fa;
+}
+
+.declaracionSection {
+    padding: 5rem 1rem;
+    background-color: white;
+}
+
+/* ===== CONTENIDO ===== */
+.contentBox {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    text-align: center;
+}
+
+.textMuted {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 1.5rem auto 3rem;
+    max-width: 800px;
+}
+
+/* ===== DECLARACIÓN CARD ===== */
+.declaracionCard {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.declaracionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.declaracionBody {
+    padding: 2rem;
+    text-align: justify;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.declaracionTitle {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+}
+
+.declaracionSubtitle {
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+/* ===== LISTAS ===== */
+.orderedList {
+    text-align: left;
+    line-height: 1.8;
+    color: #666;
+    padding-left: 1.5rem;
+}
+
+.orderedList li {
+    margin-bottom: 1rem;
+}
+
+.orderedList strong {
+    color: #333;
+}
+
+/* ===== CREENCIAS ENUMERADAS ===== */
+.creenciasList {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.creenciaItem {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.creenciaNumber {
+    font-weight: bold;
+    color: #000;
+    margin-right: 0.5rem;
+}
+
+.creenciaTitle {
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+    .mainTitle {
+        font-size: 2rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .pageContainer {
+        padding-top: 70px;
+    }
+
+    .hero {
+        height: 300px;
+    }
+
+    .mainTitle {
+        font-size: 1.8rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.4rem;
+    }
+
+    .declaracionBody {
+        padding: 1.5rem;
+        max-height: 500px;
+    }
+
+    .creenciaTitle {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .mainTitle {
+        font-size: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.3rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .declaracionTitle {
+        font-size: 1.4rem;
+    }
+
+    .declaracionSubtitle {
+        font-size: 1.2rem;
+    }
+}

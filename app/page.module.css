@@ -1,0 +1,263 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-top: 100px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  height: 800px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.heroTitle {
+  font-size: 4.5rem;
+  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.2;
+}
+
+/* ===== MISIÓN Y VISIÓN ===== */
+.misionVision {
+  background-color: #3c4d6b;
+  color: white;
+  padding: 5rem 1rem;
+}
+
+.misionText {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  font-weight: 500;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== CONTENEDOR GENERAL ===== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sectionTitle {
+  font-weight: bold;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+}
+
+/* ===== SECCIÓN DE VIDEOS ===== */
+.videosSection {
+  background-color: white;
+  padding: 5rem 1rem;
+}
+
+.videosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.videoCard {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.videoCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.videoContainer iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ===== SECCIÓN DE ENCUENTROS ===== */
+.encuentrosSection {
+  background-color: #f8f9fa;
+  padding: 5rem 1rem;
+}
+
+.encuentrosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  justify-items: center;
+}
+
+.encuentroCard {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 400px;
+  width: 100%;
+}
+
+.encuentroCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.encuentroImageContainer {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+.encuentroImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 15px 15px 0 0;
+}
+
+.cardBody {
+  padding: 2rem;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.cardText {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+/* ===== SECCIÓN DE INSTAGRAM ===== */
+.instagramSection {
+  background-color: #f0f0f0;
+  padding: 3rem 0;
+}
+
+.instagramContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.instagramPlaceholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.instagramText {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 1rem 0 2rem;
+}
+
+.instagramButton {
+  display: inline-block;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.instagramButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  margin: 0;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+
+  .misionText {
+    font-size: 1rem;
+  }
+
+  .videosGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .encuentrosGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pageContainer {
+    padding-top: 70px;
+  }
+
+  .hero {
+    height: 500px;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .misionText {
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.6rem;
+  }
+}

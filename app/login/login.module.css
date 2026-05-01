@@ -1,0 +1,133 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.pageContainer {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding-top: 100px;
+}
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 300px);
+    padding: 2rem 1rem;
+}
+
+.loginCard {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+}
+
+.loginTitle {
+    text-align: center;
+    color: #3c4d6b;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #3c4d6b;
+    box-shadow: 0 0 0 3px rgba(60, 77, 107, 0.1);
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.btnSubmit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #3c4d6b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btnSubmit:hover {
+    background-color: #2d3a52;
+    transform: translateY(-2px);
+}
+
+.btnSubmit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.toggleText {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+}
+
+.toggleBtn {
+    background: none;
+    border: none;
+    color: #3c4d6b;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.alertError {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.alertSuccess {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 767.98px) {
+    .pageContainer {
+        padding-top: 70px;
+    }
+
+    .loginCard {
+        padding: 2rem;
+    }
+}
