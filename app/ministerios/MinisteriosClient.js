@@ -12,20 +12,20 @@ export default function MinisteriosClient() {
     const familiasPastorales = [
         {
             id: 1,
-            nombre: 'Familia Pastoral 1',
-            descripcion: 'Descripción breve de la familia y su servicio en la iglesia.',
+            nombre: 'Familia Pastoral',
+            descripcion: 'Liderazgo pastoral enfocado en el cuidado espiritual y la guía doctrinal de nuestra congregación.',
             imagen: '/img/familia1.jpg'
         },
         {
             id: 2,
-            nombre: 'Familia Pastoral 2',
-            descripcion: 'Descripción breve de la familia y su servicio en la iglesia.',
+            nombre: 'Anciano',
+            descripcion: 'Liderazgo laico comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.',
             imagen: '/img/familia2.jpg'
         },
         {
             id: 3,
-            nombre: 'Familia Pastoral 3',
-            descripcion: 'Descripción breve de la familia y su servicio en la iglesia.',
+            nombre: 'Anciano',
+            descripcion: 'Liderazgo laico dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.',
             imagen: '/img/familia3.jpg'
         }
     ];
