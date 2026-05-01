@@ -1,9 +1,24 @@
 'use client';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import styles from './nosotros.module.css';
 
 export default function NosotrosClient() {
+    const [config, setConfig] = useState({});
+
+    useEffect(() => {
+        fetchConfig();
+    }, []);
+
+    const fetchConfig = async () => {
+        const { data } = await supabase.from('configuracion').select('*');
+        const configMap = {};
+        data?.forEach(item => { configMap[item.clave] = item.valor; });
+        setConfig(configMap);
+    };
+
     return (
         <div className={styles.pageContainer}>
             <Navbar />
@@ -18,7 +33,7 @@ export default function NosotrosClient() {
                     <h1 className={styles.mainTitle}>¿Quiénes Somos?</h1>
                     <div className={styles.contentBox}>
                         <p className={styles.textMuted}>
-                            Personas que expresan la misma fe, reciben el mismo Señor, creen en su nombre y fueron llamadas a hacer parte de La Iglesia Universal donde están todos aquellos que hacen la voluntad del Padre.
+                            {config.nosotros_quienes_somos || 'Personas que expresan la misma fe, reciben el mismo Señor, creen en su nombre y fueron llamadas a hacer parte de La Iglesia Universal donde están todos aquellos que hacen la voluntad del Padre.'}
                         </p>
                     </div>
 
@@ -27,7 +42,7 @@ export default function NosotrosClient() {
                     <h2 className={styles.sectionTitle}>Visión</h2>
                     <div className={styles.contentBox}>
                         <p className={styles.textMuted}>
-                            Ser una iglesia compuesta por discípulos diversos que orientan integralmente su vida de acuerdo con el evangelio buscando hacer el verdadero Jesús conocido en Puerto Montt y alrededor del mundo para la gloria de Dios
+                            {config.nosotros_vision || 'Ser una iglesia compuesta por discípulos diversos que orientan integralmente su vida de acuerdo con el evangelio buscando hacer el verdadero Jesús conocido en Puerto Montt y alrededor del mundo para la gloria de Dios'}
                         </p>
                     </div>
 
@@ -36,7 +51,7 @@ export default function NosotrosClient() {
                     <h2 className={styles.sectionTitle}>Misión</h2>
                     <div className={styles.contentBox}>
                         <p className={styles.textMuted}>
-                            La iglesia Tupahue existe para anunciar el evangelio en Puerto Montt y hasta el fin de la tierra, uniéndonos a Dios en su propósito de hacer nuevas todas las cosas a través de la persona y obra de Jesús. Nos reunimos semanalmente para proclamar las buenas nuevas del evangelio y responder en adoración, recordando la historia de la redención, y renovando nuestro pacto con Dios. Nos reunimos durante la semana, para reuniones de oración, en casas, buscando vivir y anunciar el evangelio.
+                            {config.nosotros_mision || 'La iglesia Tupahue existe para anunciar el evangelio en Puerto Montt y hasta el fin de la tierra, uniéndonos a Dios en su propósito de hacer nuevas todas las cosas a través de la persona y obra de Jesús. Nos reunimos semanalmente para proclamar las buenas nuevas del evangelio y responder en adoración, recordando la historia de la redención, y renovando nuestro pacto con Dios. Nos reunimos durante la semana, para reuniones de oración, en casas, buscando vivir y anunciar el evangelio.'}
                         </p>
                     </div>
                 </div>

@@ -6,18 +6,27 @@ import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import styles from "./page.module.css";
-import { getCurrentUser, signOut, getArticulos } from '@/lib/supabase';
+import { getCurrentUser, signOut, getArticulos, supabase } from '@/lib/supabase';
 
 export default function HomeClient() {
     const router = useRouter();
     const [user, setUser] = useState(null);
     const [articulos, setArticulos] = useState([]);
     const [loadingArticulos, setLoadingArticulos] = useState(true);
+    const [config, setConfig] = useState({});
 
     useEffect(() => {
         loadUser();
         fetchArticulos();
+        fetchConfig();
     }, []);
+
+    const fetchConfig = async () => {
+        const { data } = await supabase.from('configuracion').select('*');
+        const configMap = {};
+        data?.forEach(item => { configMap[item.clave] = item.valor; });
+        setConfig(configMap);
+    };
 
     const loadUser = async () => {
         const currentUser = await getCurrentUser();
@@ -53,10 +62,8 @@ export default function HomeClient() {
                 style={{ backgroundImage: "url('/img/inicio.jpg')" }}
             >
                 <div>
-                    <h1 className={styles.heroTitle}>
-                        BIENVENIDOS<br />
-                        IGLESIA TUPAHUE<br />
-                        REFORMADA
+                    <h1 className={styles.heroTitle} style={{ whiteSpace: 'pre-line' }}>
+                        {config.inicio_hero_titulo || 'BIENVENIDOS\nIGLESIA TUPAHUE\nREFORMADA'}
                     </h1>
                 </div>
             </section>
@@ -65,9 +72,7 @@ export default function HomeClient() {
             <section className={`${styles.misionVision} ${styles.bgBlue}`}>
                 <div className={styles.container}>
                     <h2 className={styles.misionText}>
-                        Somos una iglesia formada por personas que expresan la misma fe, reciben el mismo Señor,
-                        creen en su nombre y fueron llamados a ser parte de una nueva familia donde están todos
-                        aquellos que hacen la voluntad del Padre.
+                        {config.inicio_mision_resumen || 'Somos una iglesia formada por personas que expresan la misma fe...'}
                     </h2>
                 </div>
             </section>
@@ -81,7 +86,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"
+                                    src={config.video_dominical || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"}
                                     allowFullScreen
                                     title="Servicio Dominical"
                                 />
@@ -95,7 +100,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"
+                                    src={config.video_credo || "https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"}
                                     allowFullScreen
                                     title="El credo"
                                 />
@@ -109,7 +114,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"
+                                    src={config.video_estudio || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"}
                                     allowFullScreen
                                     title="Estudio Bíblico"
                                 />
@@ -138,9 +143,8 @@ export default function HomeClient() {
                                     className={styles.encuentroImage}
                                 />
                             </div>
-                            <div className={styles.cardBody}>
-                                <p className={styles.cardText}>Miércoles</p>
-                                <p className={styles.cardText}>19h30</p>
+                            <div className={styles.cardBody} style={{ whiteSpace: 'pre-line' }}>
+                                <p className={styles.cardText}>{config.horario_miercoles || 'Miércoles - 19h30'}</p>
                             </div>
                         </div>
 
@@ -155,10 +159,8 @@ export default function HomeClient() {
                                     className={styles.encuentroImage}
                                 />
                             </div>
-                            <div className={styles.cardBody}>
-                                <p className={styles.cardText}>Domingo</p>
-                                <p className={styles.cardText}>Escuela Bíblica 10h30</p>
-                                <p className={styles.cardText}>Servicio 11h20</p>
+                            <div className={styles.cardBody} style={{ whiteSpace: 'pre-line' }}>
+                                <p className={styles.cardText}>{config.horario_domingo || 'Domingo - Escuela 10h30 / Servicio 11h20'}</p>
                             </div>
                         </div>
                     </div>
