@@ -503,10 +503,11 @@
 
 .articlesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
   gap: 2.5rem;
   max-width: 1200px;
   margin: 3rem auto 0;
+  justify-content: center;
 }
 
 .articleCard {
@@ -517,6 +518,8 @@
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 400px;
 }
 
 .articleCard:hover {
