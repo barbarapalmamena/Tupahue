@@ -16,9 +16,14 @@ export const metadata = {
   description: "Iglesia Reformada en Puerto Montt, Los Lagos. Somos una iglesia formada por personas que expresan la misma fe y fueron llamados a ser parte de una nueva familia.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

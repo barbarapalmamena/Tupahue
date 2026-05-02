@@ -2,6 +2,13 @@
 .pageContainer {
     min-height: 100vh;
     background-color: #f8f9fa;
+    padding-top: 100px;
+}
+
+@media (max-width: 768px) {
+    .pageContainer {
+        padding-top: 80px;
+    }
 }
 
 /* Estilos específicos */
