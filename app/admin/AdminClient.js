@@ -13,6 +13,7 @@ import {
     eliminarLibro,
     getArticulos,
     crearArticulo,
+    actualizarArticulo,
     eliminarArticulo
 } from '../../lib/supabase';
 import { supabase } from '@/lib/supabase';
@@ -43,6 +44,7 @@ export default function AdminClient({ user }) {
     // Estados para Artículos
     const [newArticulo, setNewArticulo] = useState({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
     const [publicando, setPublicando] = useState(false);
+    const [editingArticuloId, setEditingArticuloId] = useState(null);
 
     // Estados para Configuración
     const [savingConfig, setSavingConfig] = useState(false);
@@ -123,15 +125,28 @@ export default function AdminClient({ user }) {
         router.push('/');
     };
 
-    // Handlers para libros y artículos (se mantienen igual)
+    // Handlers para libros y artículos
     const handleCrearArticulo = async (e) => {
         e.preventDefault();
         setPublicando(true);
         try {
-            await crearArticulo(newArticulo);
+            if (editingArticuloId) {
+                await actualizarArticulo(editingArticuloId, newArticulo);
+                alert('✅ Reflexión actualizada');
+                setEditingArticuloId(null);
+            } else {
+                await crearArticulo(newArticulo);
+                alert('✅ Reflexión publicada');
+            }
             setNewArticulo({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
             fetchArticulos();
         } catch (error) { alert(error.message); } finally { setPublicando(false); }
+    };
+
+    const prepareEditArticulo = (art) => {
+        setNewArticulo({ titulo: art.titulo, contenido: art.contenido, autor: art.autor || '' });
+        setEditingArticuloId(art.id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleCrearLibro = async (e) => {
@@ -205,12 +220,15 @@ export default function AdminClient({ user }) {
                         {activeTab === 'articulos' && (
                             <div className={styles.articlesSection}>
                                 <div className={styles.formSection}>
-                                    <h2>✍️ Nueva Reflexión</h2>
+                                    <h2>{editingArticuloId ? '✏️ Editar Reflexión' : '✍️ Nueva Reflexión'}</h2>
                                     <form onSubmit={handleCrearArticulo}>
                                         <input className={styles.input} value={newArticulo.titulo} onChange={e => setNewArticulo({...newArticulo, titulo: e.target.value})} placeholder="Título" required />
                                         <textarea className={styles.textarea} value={newArticulo.contenido} onChange={e => setNewArticulo({...newArticulo, contenido: e.target.value})} placeholder="Contenido" required />
                                         <input className={styles.input} value={newArticulo.autor} onChange={e => setNewArticulo({...newArticulo, autor: e.target.value})} placeholder="Autor" />
-                                        <button type="submit" className={styles.submitBtn}>{publicando ? '...' : 'Publicar'}</button>
+                                        <div style={{ display: 'flex', gap: '1rem' }}>
+                                            <button type="submit" className={styles.submitBtn}>{publicando ? '...' : editingArticuloId ? 'Actualizar' : 'Publicar'}</button>
+                                            {editingArticuloId && <button type="button" onClick={() => {setEditingArticuloId(null); setNewArticulo({titulo:'',contenido:'',autor: user?.user_metadata?.nombre || ''})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
+                                        </div>
                                     </form>
                                 </div>
                                 <div className={styles.listSection}>
@@ -225,7 +243,10 @@ export default function AdminClient({ user }) {
                                                         <td>{art.titulo}</td>
                                                         <td>{art.autor || 'La Iglesia'}</td>
                                                         <td>
-                                                            <button onClick={() => { if(confirm('¿Eliminar esta reflexión?')) eliminarArticulo(art.id).then(()=>fetchArticulos()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                            <div className={styles.actionButtons}>
+                                                                <button onClick={() => prepareEditArticulo(art)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
+                                                                <button onClick={() => { if(confirm('¿Eliminar esta reflexión?')) eliminarArticulo(art.id).then(()=>fetchArticulos()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))}
