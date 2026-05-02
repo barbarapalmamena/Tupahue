@@ -72,7 +72,7 @@ export default function HomeClient() {
             <section className={`${styles.misionVision} ${styles.bgBlue}`}>
                 <div className={styles.container}>
                     <h2 className={styles.misionText}>
-                        {config.inicio_mision_resumen || 'Somos una iglesia formada por personas que expresan la misma fe...'}
+                        {config.inicio_mision_resumen || 'Somos una iglesia formada por personas que expresan la misma fe, reciben el mismo Señor, creen en su nombre y fueron llamados a ser parte de una nueva familia donde están todos aquellos que hacen la voluntad del Padre.'}
                     </h2>
                 </div>
             </section>
