@@ -17,13 +17,13 @@ export default function MinisteriosClient() {
         },
         {
             id: 2,
-            nombre: 'Anciano',
+            nombre: 'Anciano - Pablo Cosque',
             descripcion: 'Liderazgo laico comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.',
             imagen: '/img/familia2.jpg'
         },
         {
             id: 3,
-            nombre: 'Anciano',
+            nombre: 'Anciano - Carlos Garcés',
             descripcion: 'Liderazgo laico dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.',
             imagen: '/img/familia3.jpg'
         }
