@@ -72,7 +72,7 @@ export default function BibliotecaClient() {
 
         setReservando(libro.id);
 
-        const { data, error } = await reservarLibro(libro.id, user.id);
+        const { data, error } = await reservarLibro(libro.id);
 
         if (error) {
             alert(error.message || 'Error al reservar el libro');
