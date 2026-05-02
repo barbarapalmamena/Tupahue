@@ -15,13 +15,6 @@ Bienvenido al repositorio oficial de la **Iglesia Reformada Tupahue**, ubicada e
 - **Autenticación:** Sistema de registro, inicio de sesión y recuperación de contraseña vía email.
 - **Mis Reservas:** Panel personal para que los miembros gestionen sus préstamos de libros y vean fechas de devolución.
 
-### 🛠️ Panel Administrativo (CMS)
-Gestión completa del sitio sin necesidad de tocar código:
-- **Configuración General:** Edición de textos del Home, enlaces de videos de YouTube y horarios.
-- **Blog (Palabra de Vida):** Creación, edición y eliminación de artículos/reflexiones.
-- **Biblioteca:** Gestión del inventario de libros (título, autor, categoría, stock e imagen).
-- **Préstamos:** Control de reservas activas, devoluciones y alertas de atrasos.
-
 ## 🛠️ Tecnologías Utilizadas
 
 - **Frontend:** [Next.js](https://nextjs.org/) (App Router)
