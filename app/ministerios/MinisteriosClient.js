@@ -35,14 +35,14 @@ export default function MinisteriosClient() {
             id: 1,
             nombre: 'Ministerio de Matrimonios',
             descripcion: 'Un espacio de encuentro y crecimiento espiritual para los matrimonios.',
-            encargado: 'Pr. Raúl Laguna y Nena García',
+            encargado: 'Pr. Raúl Laguna y ancianos',
             icono: 'bi-heart'
         },
         {
             id: 2,
             nombre: 'Ministerio de Varones',
             descripcion: 'Formación bíblica y doctrinal para todas las edades.',
-            encargado: 'Rafael Guaran',
+            encargado: 'Pr. Raúl Laguna',
             icono: 'bi-book'
         },
         {
@@ -56,7 +56,7 @@ export default function MinisteriosClient() {
             id: 4,
             nombre: 'Ministerio de Jóvenes',
             descripcion: 'Formación bíblica y doctrinal para todas las edades.',
-            encargado: 'Carlos y Maria Jesus',
+            encargado: 'Erwin Mena y Pía Hernandez',
             icono: 'bi-people'
         },
         {
@@ -70,7 +70,7 @@ export default function MinisteriosClient() {
             id: 6,
             nombre: 'Ministerio de Alabanza',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Pablo Cosque',
+            encargado: 'Bernardo Perez',
             icono: 'bi-music-note-beamed'
         },
         {
@@ -91,7 +91,7 @@ export default function MinisteriosClient() {
             id: 9,
             nombre: 'Ministerio de Misiones y evangelismo',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Rodrigo Cardenas',
+            encargado: 'n/a',
             icono: 'bi-globe'
         },
         {
@@ -105,14 +105,14 @@ export default function MinisteriosClient() {
             id: 11,
             nombre: 'Ministerio de Biblioteca',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Carolina Santibañez',
+            encargado: 'Marcelo Canales',
             icono: 'bi-book-half'
         },
         {
             id: 12,
             nombre: 'Ministerio de Audiovisual',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Marcelo',
+            encargado: 'Marcelo Miranda',
             icono: 'bi-camera-video'
         },
         {
