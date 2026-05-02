@@ -11,7 +11,7 @@ export default function MinisteriosClient() {
     const familiasPastorales = [
         {
             id: 1,
-            nombre: 'Familia Pastoral',
+            nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García',
             descripcion: 'Liderazgo pastoral enfocado en el cuidado espiritual y la guía doctrinal de nuestra congregación.',
             imagen: '/img/familia1.jpg'
         },
