@@ -205,11 +205,33 @@ export default function AdminClient({ user }) {
                         {activeTab === 'articulos' && (
                             <div className={styles.articlesSection}>
                                 <div className={styles.formSection}>
+                                    <h2>✍️ Nueva Reflexión</h2>
                                     <form onSubmit={handleCrearArticulo}>
                                         <input className={styles.input} value={newArticulo.titulo} onChange={e => setNewArticulo({...newArticulo, titulo: e.target.value})} placeholder="Título" required />
                                         <textarea className={styles.textarea} value={newArticulo.contenido} onChange={e => setNewArticulo({...newArticulo, contenido: e.target.value})} placeholder="Contenido" required />
+                                        <input className={styles.input} value={newArticulo.autor} onChange={e => setNewArticulo({...newArticulo, autor: e.target.value})} placeholder="Autor" />
                                         <button type="submit" className={styles.submitBtn}>{publicando ? '...' : 'Publicar'}</button>
                                     </form>
+                                </div>
+                                <div className={styles.listSection}>
+                                    <h2>📋 Reflexiones Publicadas</h2>
+                                    <div className={styles.tableContainer}>
+                                        <table className={styles.table}>
+                                            <thead><tr><th>Fecha</th><th>Título</th><th>Autor</th><th>Acciones</th></tr></thead>
+                                            <tbody>
+                                                {articulos.map(art => (
+                                                    <tr key={art.id}>
+                                                        <td>{new Date(art.created_at).toLocaleDateString('es-CL')}</td>
+                                                        <td>{art.titulo}</td>
+                                                        <td>{art.autor || 'La Iglesia'}</td>
+                                                        <td>
+                                                            <button onClick={() => { if(confirm('¿Eliminar esta reflexión?')) eliminarArticulo(art.id).then(()=>fetchArticulos()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         )}
