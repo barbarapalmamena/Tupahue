@@ -35,7 +35,7 @@ export default function MinisteriosClient() {
             id: 1,
             nombre: 'Ministerio de Matrimonios',
             descripcion: 'Un espacio de encuentro y crecimiento espiritual para los matrimonios.',
-            encargado: 'Pr. Raul y Nena',
+            encargado: 'Pr. Raúl Laguna y Nena García',
             icono: 'bi-heart'
         },
         {
@@ -49,7 +49,7 @@ export default function MinisteriosClient() {
             id: 3,
             nombre: 'Ministerio de Damas',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Nena',
+            encargado: 'Nena García',
             icono: 'bi-heart'
         },
         {
@@ -63,7 +63,7 @@ export default function MinisteriosClient() {
             id: 5,
             nombre: 'Ministerio Infantil',
             descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.',
-            encargado: 'Nena',
+            encargado: 'Nena García',
             icono: 'bi-star'
         },
         {
