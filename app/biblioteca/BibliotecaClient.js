@@ -96,7 +96,8 @@ export default function BibliotecaClient() {
         'Biografías',
         'Infantil',
         'Para Padres',
-        'Reflexión'
+        'Reflexión',
+        'Eclesiología'
     ];
 
     const librosFiltrados = categoriaSeleccionada
