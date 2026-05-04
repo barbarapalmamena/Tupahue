@@ -207,7 +207,19 @@ export default function AdminClient({ user }) {
                                                     <td>{res.libros?.titulo}</td>
                                                     <td>{res.estado}</td>
                                                     <td>
-                                                        <button onClick={() => { if(confirm('¿Eliminar?')) eliminarReserva(res.id, res.libro_id).then(()=>fetchReservas()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                        <button 
+                                                            onClick={() => { 
+                                                                if(confirm('¿Eliminar esta reserva?')) {
+                                                                    eliminarReserva(res.id, res.libro_id).then(({error}) => {
+                                                                        if (error) alert('Error: ' + error.message);
+                                                                        else fetchReservas();
+                                                                    });
+                                                                }
+                                                            }} 
+                                                            className={styles.btnDelete}
+                                                        >
+                                                            <i className="bi bi-trash"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -245,7 +257,19 @@ export default function AdminClient({ user }) {
                                                         <td>
                                                             <div className={styles.actionButtons}>
                                                                 <button onClick={() => prepareEditArticulo(art)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
-                                                                <button onClick={() => { if(confirm('¿Eliminar esta reflexión?')) eliminarArticulo(art.id).then(()=>fetchArticulos()) }} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                                <button 
+                                                                    onClick={() => { 
+                                                                        if(confirm('¿Eliminar esta reflexión?')) {
+                                                                            eliminarArticulo(art.id).then(({error}) => {
+                                                                                if (error) alert('Error: ' + error.message);
+                                                                                else fetchArticulos();
+                                                                            });
+                                                                        }
+                                                                    }} 
+                                                                    className={styles.btnDelete}
+                                                                >
+                                                                    <i className="bi bi-trash"></i>
+                                                                </button>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -274,6 +298,7 @@ export default function AdminClient({ user }) {
                                                 <option value="Historia">Historia</option>
                                                 <option value="Devocionales">Devocionales</option>
                                                 <option value="Biografías">Biografías</option>
+                                                <option value="Infantil">Infantil</option>
                                             </select>
                                             <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Páginas" />
                                             <input type="number" className={styles.input} value={newLibro.cantidad} onChange={e => setNewLibro({...newLibro, cantidad: e.target.value})} placeholder="Stock" min="0" />
@@ -298,7 +323,19 @@ export default function AdminClient({ user }) {
                                                         <td>
                                                             <div className={styles.actionButtons}>
                                                                 <button onClick={() => prepareEditLibro(libro)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
-                                                                <button onClick={() => {if(confirm('¿Eliminar?')) eliminarLibro(libro.id).then(()=>fetchLibros())}} className={styles.btnDelete}><i className="bi bi-trash"></i></button>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        if(confirm('¿Eliminar este libro?')) {
+                                                                            eliminarLibro(libro.id).then(({error}) => {
+                                                                                if (error) alert('No se pudo eliminar el libro: ' + error.message);
+                                                                                else fetchLibros();
+                                                                            });
+                                                                        }
+                                                                    }} 
+                                                                    className={styles.btnDelete}
+                                                                >
+                                                                    <i className="bi bi-trash"></i>
+                                                                </button>
                                                             </div>
                                                         </td>
                                                     </tr>

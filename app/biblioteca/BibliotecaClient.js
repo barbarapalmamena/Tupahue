@@ -93,7 +93,8 @@ export default function BibliotecaClient() {
         'Ficción Cristiana',
         'Historia',
         'Devocionales',
-        'Biografías'
+        'Biografías',
+        'Infantil'
     ];
 
     const librosFiltrados = categoriaSeleccionada
