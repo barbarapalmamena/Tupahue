@@ -23,8 +23,6 @@ export default function AdminClient({ user }) {
     const [reservas, setReservas] = useState([]);
     const [articulos, setArticulos] = useState([]);
     const [libros, setLibros] = useState([]);
-    const [config, setConfig] = useState([]);
-    const [ministerios, setMinisterios] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('reservas');
     
@@ -46,17 +44,12 @@ export default function AdminClient({ user }) {
     const [publicando, setPublicando] = useState(false);
     const [editingArticuloId, setEditingArticuloId] = useState(null);
 
-    // Estados para Configuración
-    const [savingConfig, setSavingConfig] = useState(false);
-    const [editingMinisterio, setEditingMinisterio] = useState(null);
-
     const router = useRouter();
 
     useEffect(() => {
         if (activeTab === 'reservas') fetchReservas();
         else if (activeTab === 'articulos') fetchArticulos();
         else if (activeTab === 'libros') fetchLibros();
-        else if (activeTab === 'sitio') fetchSitio();
     }, [activeTab]);
 
     async function fetchReservas() {
@@ -86,39 +79,6 @@ export default function AdminClient({ user }) {
             setLibros(data || []);
         } catch (error) { console.error(error); } finally { setLoading(false); }
     }
-
-    async function fetchSitio() {
-        setLoading(true);
-        try {
-            const { data: configData } = await supabase.from('configuracion').select('*');
-            const { data: minData } = await supabase.from('ministerios').select('*').order('id');
-            setConfig(configData || []);
-            setMinisterios(minData || []);
-        } catch (error) { console.error(error); } finally { setLoading(false); }
-    }
-
-    const handleUpdateConfig = async (clave, valor) => {
-        setSavingConfig(true);
-        try {
-            await supabase.from('configuracion').update({ valor }).eq('clave', clave);
-            fetchSitio();
-        } catch (error) { alert(error.message); } finally { setSavingConfig(false); }
-    };
-
-    const handleUpdateMinisterio = async (e) => {
-        e.preventDefault();
-        try {
-            await supabase.from('ministerios').update({
-                nombre: editingMinisterio.nombre,
-                descripcion: editingMinisterio.descripcion,
-                encargado: editingMinisterio.encargado,
-                icono: editingMinisterio.icono
-            }).eq('id', editingMinisterio.id);
-            setEditingMinisterio(null);
-            fetchSitio();
-            alert('✅ Ministerio actualizado');
-        } catch (error) { alert(error.message); }
-    };
 
     const handleLogout = async () => {
         await signOut();
@@ -190,7 +150,6 @@ export default function AdminClient({ user }) {
                     <button className={`${styles.tabBtn} ${activeTab === 'reservas' ? styles.active : ''}`} onClick={() => setActiveTab('reservas')}>📚 Préstamos</button>
                     <button className={`${styles.tabBtn} ${activeTab === 'articulos' ? styles.active : ''}`} onClick={() => setActiveTab('articulos')}>✍️ Blog</button>
                     <button className={`${styles.tabBtn} ${activeTab === 'libros' ? styles.active : ''}`} onClick={() => setActiveTab('libros')}>📖 Inventario</button>
-                    <button className={`${styles.tabBtn} ${activeTab === 'sitio' ? styles.active : ''}`} onClick={() => setActiveTab('sitio')}>🌐 Sitio</button>
                 </div>
 
                 {loading ? <div className={styles.loading}>Cargando...</div> : (
@@ -348,27 +307,6 @@ export default function AdminClient({ user }) {
                             </div>
                         )}
 
-                        {activeTab === 'sitio' && (
-                            <div className={styles.sitioSection}>
-                                <div className={styles.sitioGrid}>
-                                    <div className={styles.configCard} style={{maxWidth:'800px', margin:'0 auto'}}>
-                                        <h3>🏠 Configuración de Inicio y Nosotros</h3>
-                                        <p style={{fontSize:'0.9rem', color:'#666', marginBottom:'1.5rem'}}>Edita los textos principales. Los cambios se guardan al hacer clic fuera del cuadro.</p>
-                                        {config.map(item => (
-                                            <div key={item.clave} className={styles.configItem}>
-                                                <label style={{fontWeight:'bold', display:'block', marginBottom:'5px'}}>{item.clave.replace(/_/g, ' ').toUpperCase()}</label>
-                                                <textarea 
-                                                    className={styles.textarea} 
-                                                    defaultValue={item.valor} 
-                                                    onBlur={(e) => handleUpdateConfig(item.clave, e.target.value)}
-                                                    style={{minHeight: item.clave.includes('titulo') ? '60px' : '120px'}}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </>
                 )}
             </div>
