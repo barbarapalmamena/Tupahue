@@ -243,6 +243,21 @@ export default function AdminClient({ user }) {
 
                         {activeTab === 'libros' && (
                             <div className={styles.articlesSection}>
+                                {/* Buscador destacado en la parte superior */}
+                                <div style={{ backgroundColor: '#f8f9fa', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', border: '1px solid #dee2e6' }}>
+                                    <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <i className="bi bi-search"></i> Buscar en el Inventario
+                                    </h3>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Escribe el nombre del libro o autor para filtrar al instante..." 
+                                        className={styles.input} 
+                                        style={{ fontSize: '1.1rem', padding: '0.8rem' }}
+                                        value={busquedaLibro} 
+                                        onChange={(e) => setBusquedaLibro(e.target.value)} 
+                                    />
+                                </div>
+
                                 <div className={styles.formSection}>
                                     <h2>{editingLibroId ? '✏️ Editar' : '📚 Nuevo Libro'}</h2>
                                     <form onSubmit={handleCrearLibro}>
@@ -274,15 +289,6 @@ export default function AdminClient({ user }) {
                                     </form>
                                 </div>
                                 <div className={styles.listSection}>
-                                    <div style={{ marginBottom: '1rem' }}>
-                                        <input 
-                                            type="text" 
-                                            placeholder="Buscar libro por nombre o autor..." 
-                                            className={styles.input} 
-                                            value={busquedaLibro} 
-                                            onChange={(e) => setBusquedaLibro(e.target.value)} 
-                                        />
-                                    </div>
                                     <div className={styles.tableContainer}>
                                         <table className={styles.table}>
                                             <thead><tr><th>Portada</th><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
