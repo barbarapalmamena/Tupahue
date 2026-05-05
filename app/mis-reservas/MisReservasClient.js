@@ -84,7 +84,7 @@ export default function MisReservasClient() {
         return {
             dias: diasRestantes,
             fechaDevolucion: fechaVencimiento.toLocaleDateString('es-CL'),
-            diasPrestamo: paginas < 100 ? 3 : 14
+            diasPrestamo: paginas <= 100 ? 7 : 14
         };
     };
 
