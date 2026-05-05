@@ -3,31 +3,57 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
+import { getCurrentUser, signOut, getUserRole } from '@/lib/supabase';
 
-export default function Navbar({ user, onLogout }) {
+export default function Navbar({ user: propUser, onLogout }) {
+    const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userRole, setUserRole] = useState(null);
+    const [navUser, setNavUser] = useState(propUser || null);
     const pathname = usePathname();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    // Cargar usuario si no se pasó por props
+    useEffect(() => {
+        if (propUser) {
+            setNavUser(propUser);
+        } else {
+            const fetchUser = async () => {
+                const currentUser = await getCurrentUser();
+                setNavUser(currentUser);
+            };
+            fetchUser();
+        }
+    }, [propUser]);
+
     // Cargar rol del usuario
     useEffect(() => {
-        if (user) {
+        if (navUser) {
             const fetchRole = async () => {
-                const { getUserRole } = await import('@/lib/supabase');
-                const role = await getUserRole(user.id);
+                const role = await getUserRole(navUser.id);
                 setUserRole(role);
             };
             fetchRole();
         } else {
             setUserRole(null);
         }
-    }, [user]);
+    }, [navUser]);
+
+    const handleInternalLogout = async () => {
+        if (onLogout) {
+            onLogout();
+        } else {
+            await signOut();
+            setNavUser(null);
+            setUserRole(null);
+            router.push('/');
+        }
+    };
 
     // Cerrar menú al cambiar de página
     useEffect(() => {
@@ -103,9 +129,9 @@ export default function Navbar({ user, onLogout }) {
                                 Biblioteca
                             </Link>
                         </li>
-                        {user ? (
+                        {navUser ? (
                             <>
-                                {(userRole === 'admin' || user.user_metadata?.role === 'admin') && (
+                                {(userRole === 'admin' || navUser.user_metadata?.role === 'admin') && (
                                     <li className={styles.navItem}>
                                         <Link
                                             className={`${styles.navLink} ${pathname === '/admin' ? styles.active : ''}`}
@@ -118,7 +144,7 @@ export default function Navbar({ user, onLogout }) {
                                 <li className={styles.navItem}>
                                     <button
                                         className={styles.btnLogout}
-                                        onClick={onLogout}
+                                        onClick={handleInternalLogout}
                                     >
                                         Cerrar Sesión
                                     </button>
