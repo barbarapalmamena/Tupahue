@@ -38,6 +38,7 @@ export default function AdminClient({ user }) {
     });
     const [guardandoLibro, setGuardandoLibro] = useState(false);
     const [editingLibroId, setEditingLibroId] = useState(null);
+    const [busquedaLibro, setBusquedaLibro] = useState('');
 
     // Estados para Artículos
     const [newArticulo, setNewArticulo] = useState({ titulo: '', contenido: '', autor: user?.user_metadata?.nombre || '' });
@@ -273,11 +274,23 @@ export default function AdminClient({ user }) {
                                     </form>
                                 </div>
                                 <div className={styles.listSection}>
+                                    <div style={{ marginBottom: '1rem' }}>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Buscar libro por nombre o autor..." 
+                                            className={styles.input} 
+                                            value={busquedaLibro} 
+                                            onChange={(e) => setBusquedaLibro(e.target.value)} 
+                                        />
+                                    </div>
                                     <div className={styles.tableContainer}>
                                         <table className={styles.table}>
                                             <thead><tr><th>Portada</th><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
                                             <tbody>
-                                                {libros.map(libro => (
+                                                {libros.filter(libro => 
+                                                    libro.titulo.toLowerCase().includes(busquedaLibro.toLowerCase()) || 
+                                                    libro.autor.toLowerCase().includes(busquedaLibro.toLowerCase())
+                                                ).map(libro => (
                                                     <tr key={libro.id}>
                                                         <td>{libro.imagen_url ? <img src={libro.imagen_url} alt="P" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} /> : 'Sin foto'}</td>
                                                         <td>{libro.titulo}</td>
