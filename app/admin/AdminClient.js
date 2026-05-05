@@ -287,10 +287,12 @@ export default function AdminClient({ user }) {
                                         <table className={styles.table}>
                                             <thead><tr><th>Portada</th><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
                                             <tbody>
-                                                {libros.filter(libro => 
-                                                    libro.titulo.toLowerCase().includes(busquedaLibro.toLowerCase()) || 
-                                                    libro.autor.toLowerCase().includes(busquedaLibro.toLowerCase())
-                                                ).map(libro => (
+                                                {libros.filter(libro => {
+                                                    const search = (busquedaLibro || '').toLowerCase();
+                                                    const titulo = (libro.titulo || '').toLowerCase();
+                                                    const autor = (libro.autor || '').toLowerCase();
+                                                    return titulo.includes(search) || autor.includes(search);
+                                                }).map(libro => (
                                                     <tr key={libro.id}>
                                                         <td>{libro.imagen_url ? <img src={libro.imagen_url} alt="P" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} /> : 'Sin foto'}</td>
                                                         <td>{libro.titulo}</td>
