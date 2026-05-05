@@ -12,7 +12,7 @@ export default function BibliotecaClient() {
     const router = useRouter();
     const [busqueda, setBusqueda] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 9;
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
