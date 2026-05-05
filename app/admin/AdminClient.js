@@ -30,7 +30,6 @@ export default function AdminClient({ user }) {
     const [newLibro, setNewLibro] = useState({ 
         titulo: '', 
         autor: '', 
-        categoria: 'Teología', 
         paginas: '', 
         cantidad: 1, 
         imagen_url: '', 
@@ -127,14 +126,14 @@ export default function AdminClient({ user }) {
                 await crearLibro(payload);
                 alert('✅ Guardado');
             }
-            setNewLibro({ titulo: '', autor: '', categoria: 'Teología', paginas: '', cantidad: 1, imagen_url: '', disponible: true });
+            setNewLibro({ titulo: '', autor: '', paginas: '', cantidad: 1, imagen_url: '', disponible: true });
             setEditingLibroId(null);
             fetchLibros();
         } catch (error) { alert(error.message); } finally { setGuardandoLibro(false); }
     };
 
     const prepareEditLibro = (libro) => {
-        setNewLibro({ titulo: libro.titulo, autor: libro.autor, categoria: libro.categoria, paginas: libro.paginas || '', cantidad: libro.cantidad, imagen_url: libro.imagen_url || '', disponible: libro.disponible });
+        setNewLibro({ titulo: libro.titulo, autor: libro.autor, paginas: libro.paginas || '', cantidad: libro.cantidad, imagen_url: libro.imagen_url || '', disponible: libro.disponible });
         setEditingLibroId(libro.id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -251,27 +250,13 @@ export default function AdminClient({ user }) {
                                             <input className={styles.input} value={newLibro.autor} onChange={e => setNewLibro({...newLibro, autor: e.target.value})} placeholder="Autor" required />
                                         </div>
                                         <div className={styles.formRow}>
-                                            <select className={styles.input} value={newLibro.categoria} onChange={e => setNewLibro({...newLibro, categoria: e.target.value})}>
-                                                <option value="Teología">Teología</option>
-                                                <option value="Apologética">Apologética</option>
-                                                <option value="Ficción Cristiana">Ficción Cristiana</option>
-                                                <option value="Historia">Historia</option>
-                                                <option value="Devocionales">Devocionales</option>
-                                                <option value="Biografías">Biografías</option>
-                                                <option value="Infantil">Infantil</option>
-                                                <option value="Para Padres">Para Padres</option>
-                                                <option value="Reflexión">Reflexión</option>
-                                                <option value="Eclesiología">Eclesiología</option>
-                                                <option value="Liderazgo">Liderazgo</option>
-                                                <option value="Matrimonio">Matrimonio</option>
-                                            </select>
                                             <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Páginas" />
                                             <input type="number" className={styles.input} value={newLibro.cantidad} onChange={e => setNewLibro({...newLibro, cantidad: e.target.value})} placeholder="Stock" min="0" />
                                         </div>
                                         <input className={styles.input} value={newLibro.imagen_url} onChange={e => setNewLibro({...newLibro, imagen_url: e.target.value})} placeholder="URL Imagen Portada" />
                                         <div style={{ display: 'flex', gap: '1rem' }}>
                                             <button type="submit" className={styles.submitBtn} disabled={guardandoLibro}>{editingLibroId ? 'Actualizar' : 'Guardar'}</button>
-                                            {editingLibroId && <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',categoria:'Teología',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
+                                            {editingLibroId && <button type="button" onClick={() => {setEditingLibroId(null); setNewLibro({titulo:'',autor:'',paginas:'',cantidad:1,imagen_url:'',disponible:true})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
                                         </div>
                                     </form>
                                 </div>

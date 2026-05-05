@@ -10,7 +10,6 @@ import { getLibros, reservarLibro, getCurrentUser, signOut } from '@/lib/supabas
 
 export default function BibliotecaClient() {
     const router = useRouter();
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
     const [busqueda, setBusqueda] = useState('');
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -88,32 +87,13 @@ export default function BibliotecaClient() {
         setReservando(null);
     };
 
-    const categorias = [
-        'Teología',
-        'Apologética',
-        'Ficción Cristiana',
-        'Historia',
-        'Devocionales',
-        'Biografías',
-        'Infantil',
-        'Para Padres',
-        'Reflexión',
-        'Eclesiología',
-        'Liderazgo',
-        'Matrimonio'
-    ];
-
     const librosFiltrados = libros.filter(libro => {
-        const matchesCategoria = categoriaSeleccionada ? libro.categoria === categoriaSeleccionada : true;
-        
         const normalize = (str) => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
         const search = normalize(busqueda);
         const titulo = normalize(libro.titulo);
         const autor = normalize(libro.autor);
         
-        const matchesSearch = titulo.includes(search) || autor.includes(search);
-        
-        return matchesCategoria && matchesSearch;
+        return titulo.includes(search) || autor.includes(search);
     });
 
     const handleLogout = async () => {
@@ -148,25 +128,6 @@ export default function BibliotecaClient() {
                     />
                 </div>
 
-                {/* Filtro de categorías */}
-                <div className={styles.filtroContainer}>
-                    <button
-                        onClick={() => setCategoriaSeleccionada(null)}
-                        className={`${styles.btnFilter} ${!categoriaSeleccionada ? styles.active : ''}`}
-                    >
-                        Todos
-                    </button>
-                    {categorias.map(cat => (
-                        <button
-                            key={cat}
-                            onClick={() => setCategoriaSeleccionada(cat)}
-                            className={`${styles.btnFilter} ${categoriaSeleccionada === cat ? styles.active : ''}`}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
-
                 {/* Libros */}
                 {loading ? (
                     <div className={styles.loadingMessage}>
@@ -197,9 +158,6 @@ export default function BibliotecaClient() {
                                         <h5 className={styles.cardTitle}>{libro.titulo}</h5>
                                         <p className={styles.cardText}>
                                             <strong>Autor:</strong> {libro.autor}
-                                        </p>
-                                        <p className={styles.cardText}>
-                                            <strong>Categoría:</strong> {libro.categoria}
                                         </p>
                                         {libro.paginas && (
                                             <p className={styles.cardText}>
