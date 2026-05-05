@@ -296,7 +296,10 @@ export default function AdminClient({ user }) {
                                                 }).map(libro => (
                                                     <tr key={libro.id}>
                                                         <td>{libro.imagen_url ? <img src={libro.imagen_url} alt="P" style={{ width: '40px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} /> : 'Sin foto'}</td>
-                                                        <td>{libro.titulo}</td>
+                                                        <td>
+                                                            <div style={{ fontWeight: '500' }}>{libro.titulo}</div>
+                                                            <div style={{ fontSize: '0.85rem', color: '#6c757d' }}>{libro.autor}</div>
+                                                        </td>
                                                         <td>{libro.cantidad}</td>
                                                         <td>
                                                             <div className={styles.actionButtons}>
