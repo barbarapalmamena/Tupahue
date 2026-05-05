@@ -104,9 +104,11 @@ export default function BibliotecaClient() {
     const librosFiltrados = libros.filter(libro => {
         const matchesCategoria = categoriaSeleccionada ? libro.categoria === categoriaSeleccionada : true;
         
-        const search = (busqueda || '').toLowerCase();
-        const titulo = (libro.titulo || '').toLowerCase();
-        const autor = (libro.autor || '').toLowerCase();
+        const normalize = (str) => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const search = normalize(busqueda);
+        const titulo = normalize(libro.titulo);
+        const autor = normalize(libro.autor);
+        
         const matchesSearch = titulo.includes(search) || autor.includes(search);
         
         return matchesCategoria && matchesSearch;

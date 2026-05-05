@@ -288,9 +288,10 @@ export default function AdminClient({ user }) {
                                             <thead><tr><th>Portada</th><th>Libro</th><th>Stock</th><th>Acciones</th></tr></thead>
                                             <tbody>
                                                 {libros.filter(libro => {
-                                                    const search = (busquedaLibro || '').toLowerCase();
-                                                    const titulo = (libro.titulo || '').toLowerCase();
-                                                    const autor = (libro.autor || '').toLowerCase();
+                                                    const normalize = (str) => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                                    const search = normalize(busquedaLibro);
+                                                    const titulo = normalize(libro.titulo);
+                                                    const autor = normalize(libro.autor);
                                                     return titulo.includes(search) || autor.includes(search);
                                                 }).map(libro => (
                                                     <tr key={libro.id}>
