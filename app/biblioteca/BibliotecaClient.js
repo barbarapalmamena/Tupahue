@@ -29,28 +29,33 @@ export default function BibliotecaClient() {
         setLoading(true);
 
         try {
-            // Obtener usuario actual
-            const currentUser = await getCurrentUser();
-            setUser(currentUser);
-            console.log("Usuario cargado:", currentUser ? currentUser.email : "Sin sesión");
-
-            if (currentUser) {
-                const { getUserRole } = await import('@/lib/supabase');
-                const role = await getUserRole(currentUser.id);
-                setUserRole(role);
-                console.log("Rol cargado:", role);
-            }
-
-            // Obtener libros
+            // 1. Obtener libros primero (siempre debe funcionar)
             console.log("Llamando a getLibros()...");
             const { data, error } = await getLibros();
-            
+
             if (error) {
                 console.error("Error al cargar libros de Supabase:", error);
             } else {
                 console.log("Libros recibidos de Supabase:", data);
                 if (data) setLibros(data);
             }
+
+            // 2. Intentar obtener el usuario en un bloque separado para que no bloquee los libros si falla
+            try {
+                const currentUser = await getCurrentUser();
+                setUser(currentUser || null);
+
+                if (currentUser) {
+                    const { getUserRole } = await import('@/lib/supabase');
+                    const role = await getUserRole(currentUser.id);
+                    setUserRole(role);
+                    console.log("Rol cargado:", role);
+                }
+            } catch (authError) {
+                console.warn("No se pudo cargar la sesión del usuario:", authError);
+                setUser(null);
+            }
+            
         } catch (err) {
             console.error("Error crítico en cargarDatos:", err);
         }
@@ -94,7 +99,7 @@ export default function BibliotecaClient() {
         const search = normalize(busqueda);
         const titulo = normalize(libro.titulo);
         const autor = normalize(libro.autor);
-        
+
         return titulo.includes(search) || autor.includes(search);
     });
 
@@ -126,15 +131,15 @@ export default function BibliotecaClient() {
 
                 {/* Buscador */}
                 <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-                    <input 
-                        type="text" 
-                        placeholder="Buscar libro por nombre o autor..." 
+                    <input
+                        type="text"
+                        placeholder="Buscar libro por nombre o autor..."
                         style={{ padding: '0.8rem', width: '100%', maxWidth: '600px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem' }}
-                        value={busqueda} 
+                        value={busqueda}
                         onChange={(e) => {
                             setBusqueda(e.target.value);
                             setCurrentPage(1);
-                        }} 
+                        }}
                     />
                 </div>
 
@@ -149,94 +154,94 @@ export default function BibliotecaClient() {
                             {currentLibros.length > 0 ? (
                                 currentLibros.map(libro => (
                                     <div key={libro.id} className={styles.bookCard}>
-                                    <div className={styles.cardImageContainer}>
-                                        {libro.imagen_url ? (
-                                            <Image
-                                                src={libro.imagen_url}
-                                                className={styles.cardImage}
-                                                alt={libro.titulo}
-                                                width={300}
-                                                height={400}
-                                                priority={true}
-                                            />
-                                        ) : (
-                                            <div className={styles.placeholderImage}>
-                                                <i className="bi bi-book" style={{ fontSize: '3rem', color: '#999' }}></i>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className={styles.cardBody}>
-                                        <h5 className={styles.cardTitle}>{libro.titulo}</h5>
-                                        <p className={styles.cardText}>
-                                            <strong>Autor:</strong> {libro.autor}
-                                        </p>
-                                        {libro.paginas && (
+                                        <div className={styles.cardImageContainer}>
+                                            {libro.imagen_url ? (
+                                                <Image
+                                                    src={libro.imagen_url}
+                                                    className={styles.cardImage}
+                                                    alt={libro.titulo}
+                                                    width={300}
+                                                    height={400}
+                                                    priority={true}
+                                                />
+                                            ) : (
+                                                <div className={styles.placeholderImage}>
+                                                    <i className="bi bi-book" style={{ fontSize: '3rem', color: '#999' }}></i>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className={styles.cardBody}>
+                                            <h5 className={styles.cardTitle}>{libro.titulo}</h5>
                                             <p className={styles.cardText}>
-                                                <strong>Páginas:</strong> {libro.paginas}
+                                                <strong>Autor:</strong> {libro.autor}
                                             </p>
-                                        )}
-                                        {libro.disponible && libro.paginas && (
-                                            <p className={styles.cardText}>
-                                                <strong>Préstamo:</strong> {libro.paginas < 100 ? '7 días' : '14 días'}
-                                            </p>
-                                        )}
-                                        {libro.disponible ? (
-                                            <>
-                                                {userRole !== 'admin' && user?.user_metadata?.role !== 'admin' ? (
-                                                    <button
-                                                        onClick={() => handleReservar(libro)}
-                                                        className={styles.btnPrimary}
-                                                        disabled={reservando === libro.id}
-                                                    >
-                                                        {reservando === libro.id ? (
-                                                            <>
-                                                                <i className="bi bi-hourglass-split"></i> Reservando...
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <i className="bi bi-bookmark-plus"></i> Reservar
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                ) : (
-                                                    <p style={{ color: '#666', fontSize: '0.85rem', fontStyle: 'italic', marginTop: '1rem' }}>
-                                                        Los administradores no realizan reservas.
-                                                    </p>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <span className={styles.badgeDanger}>
-                                                <i className="bi bi-x-circle"></i> No disponible
-                                            </span>
-                                        )}
+                                            {libro.paginas && (
+                                                <p className={styles.cardText}>
+                                                    <strong>Páginas:</strong> {libro.paginas}
+                                                </p>
+                                            )}
+                                            {libro.disponible && libro.paginas && (
+                                                <p className={styles.cardText}>
+                                                    <strong>Préstamo:</strong> {libro.paginas < 100 ? '7 días' : '14 días'}
+                                                </p>
+                                            )}
+                                            {libro.disponible ? (
+                                                <>
+                                                    {userRole !== 'admin' && user?.user_metadata?.role !== 'admin' ? (
+                                                        <button
+                                                            onClick={() => handleReservar(libro)}
+                                                            className={styles.btnPrimary}
+                                                            disabled={reservando === libro.id}
+                                                        >
+                                                            {reservando === libro.id ? (
+                                                                <>
+                                                                    <i className="bi bi-hourglass-split"></i> Reservando...
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <i className="bi bi-bookmark-plus"></i> Reservar
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    ) : (
+                                                        <p style={{ color: '#666', fontSize: '0.85rem', fontStyle: 'italic', marginTop: '1rem' }}>
+                                                            Los administradores no realizan reservas.
+                                                        </p>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <span className={styles.badgeDanger}>
+                                                    <i className="bi bi-x-circle"></i> No disponible
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className={styles.noBooks}>No hay libros disponibles en esta categoría.</p>
-                        )}
-                    </div>
-
-                    {/* Paginación */}
-                    {totalPages > 1 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem', alignItems: 'center' }}>
-                            <button 
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                disabled={currentPage === 1}
-                                style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === 1 ? '#f8f9fa' : '#fff', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
-                            >
-                                Anterior
-                            </button>
-                            <span>Página {currentPage} de {totalPages}</span>
-                            <button 
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                                style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === totalPages ? '#f8f9fa' : '#fff', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
-                            >
-                                Siguiente
-                            </button>
+                                ))
+                            ) : (
+                                <p className={styles.noBooks}>No hay libros disponibles en esta categoría.</p>
+                            )}
                         </div>
-                    )}
+
+                        {/* Paginación */}
+                        {totalPages > 1 && (
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem', alignItems: 'center' }}>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === 1 ? '#f8f9fa' : '#fff', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                                >
+                                    Anterior
+                                </button>
+                                <span>Página {currentPage} de {totalPages}</span>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === totalPages ? '#f8f9fa' : '#fff', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+                                >
+                                    Siguiente
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>
