@@ -263,6 +263,7 @@ export default function AdminClient({ user }) {
                                                 <option value="Reflexión">Reflexión</option>
                                                 <option value="Eclesiología">Eclesiología</option>
                                                 <option value="Liderazgo">Liderazgo</option>
+                                                <option value="Matrimonio">Matrimonio</option>
                                             </select>
                                             <input type="number" className={styles.input} value={newLibro.paginas} onChange={e => setNewLibro({...newLibro, paginas: e.target.value})} placeholder="Páginas" />
                                             <input type="number" className={styles.input} value={newLibro.cantidad} onChange={e => setNewLibro({...newLibro, cantidad: e.target.value})} placeholder="Stock" min="0" />

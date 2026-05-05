@@ -99,7 +99,8 @@ export default function BibliotecaClient() {
         'Para Padres',
         'Reflexión',
         'Eclesiología',
-        'Liderazgo'
+        'Liderazgo',
+        'Matrimonio'
     ];
 
     const librosFiltrados = libros.filter(libro => {
