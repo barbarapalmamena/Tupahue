@@ -6,7 +6,7 @@ import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import styles from "./biblioteca.module.css";
-import { getLibros, reservarLibro, getCurrentUser, signOut } from '@/lib/supabase';
+import { getLibros, reservarLibro, getCurrentUser, signOut, getReservasUsuario } from '@/lib/supabase';
 
 export default function BibliotecaClient() {
     const router = useRouter();
@@ -18,6 +18,7 @@ export default function BibliotecaClient() {
     const [user, setUser] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const [reservando, setReservando] = useState(null);
+    const [misReservas, setMisReservas] = useState([]);
 
     // Cargar libros y usuario
     useEffect(() => {
@@ -50,6 +51,11 @@ export default function BibliotecaClient() {
                     const role = await getUserRole(currentUser.id);
                     setUserRole(role);
                     console.log("Rol cargado:", role);
+
+                    if (role !== 'admin' && currentUser.user_metadata?.role !== 'admin') {
+                        const { data: resData } = await getReservasUsuario(currentUser.id);
+                        if (resData) setMisReservas(resData);
+                    }
                 }
             } catch (authError) {
                 console.warn("No se pudo cargar la sesión del usuario:", authError);
@@ -87,7 +93,7 @@ export default function BibliotecaClient() {
             // Calcular días de préstamo según páginas
             const diasPrestamo = libro.paginas < 100 ? 7 : 14;
             alert(`¡Libro reservado exitosamente! Tienes ${diasPrestamo} días para devolverlo.`);
-            // Recargar libros
+            // Recargar libros y reservas
             cargarDatos();
         }
 
@@ -126,6 +132,29 @@ export default function BibliotecaClient() {
                 {user && (
                     <div className={styles.welcomeMessage}>
                         <i className="bi bi-person-check"></i> Bienvenido, {user.user_metadata?.nombre || user.email}
+                    </div>
+                )}
+
+                {/* Sección Mis Reservas para Usuarios Comunes */}
+                {user && userRole !== 'admin' && user.user_metadata?.role !== 'admin' && misReservas.length > 0 && (
+                    <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: '#e9ecef', borderRadius: '12px' }}>
+                        <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#333' }}>
+                            <i className="bi bi-bookmark-check" style={{ marginRight: '0.5rem', color: '#0d6efd' }}></i>
+                            Tus Reservas
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+                            {misReservas.map(res => (
+                                <div key={res.id} style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px', borderLeft: res.estado === 'activa' ? '4px solid #17a2b8' : '4px solid #28a745', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>{res.libros?.titulo}</h4>
+                                    <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#666' }}>
+                                        <strong>Estado:</strong> {res.estado === 'activa' ? 'Activa' : 'Devuelto'}
+                                    </p>
+                                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>
+                                        <strong>Vence:</strong> {res.vencimiento ? new Date(res.vencimiento).toLocaleDateString('es-CL') : 'No definido'}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
 
