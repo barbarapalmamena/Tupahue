@@ -11,6 +11,8 @@ import { getLibros, reservarLibro, getCurrentUser, signOut } from '@/lib/supabas
 export default function BibliotecaClient() {
     const router = useRouter();
     const [busqueda, setBusqueda] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -96,6 +98,11 @@ export default function BibliotecaClient() {
         return titulo.includes(search) || autor.includes(search);
     });
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentLibros = librosFiltrados.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(librosFiltrados.length / itemsPerPage);
+
     const handleLogout = async () => {
         await signOut();
         setUser(null);
@@ -124,7 +131,10 @@ export default function BibliotecaClient() {
                         placeholder="Buscar libro por nombre o autor..." 
                         style={{ padding: '0.8rem', width: '100%', maxWidth: '600px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem' }}
                         value={busqueda} 
-                        onChange={(e) => setBusqueda(e.target.value)} 
+                        onChange={(e) => {
+                            setBusqueda(e.target.value);
+                            setCurrentPage(1);
+                        }} 
                     />
                 </div>
 
@@ -134,10 +144,11 @@ export default function BibliotecaClient() {
                         <i className="bi bi-hourglass-split"></i> Cargando libros...
                     </div>
                 ) : (
-                    <div className={styles.booksGrid}>
-                        {librosFiltrados.length > 0 ? (
-                            librosFiltrados.map(libro => (
-                                <div key={libro.id} className={styles.bookCard}>
+                    <>
+                        <div className={styles.booksGrid}>
+                            {currentLibros.length > 0 ? (
+                                currentLibros.map(libro => (
+                                    <div key={libro.id} className={styles.bookCard}>
                                     <div className={styles.cardImageContainer}>
                                         {libro.imagen_url ? (
                                             <Image
@@ -205,6 +216,28 @@ export default function BibliotecaClient() {
                             <p className={styles.noBooks}>No hay libros disponibles en esta categoría.</p>
                         )}
                     </div>
+
+                    {/* Paginación */}
+                    {totalPages > 1 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem', alignItems: 'center' }}>
+                            <button 
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === 1 ? '#f8f9fa' : '#fff', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                            >
+                                Anterior
+                            </button>
+                            <span>Página {currentPage} de {totalPages}</span>
+                            <button 
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                style={{ padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid #ccc', backgroundColor: currentPage === totalPages ? '#f8f9fa' : '#fff', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                    )}
+                    </>
                 )}
             </div>
 
