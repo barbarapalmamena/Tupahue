@@ -11,6 +11,7 @@ import { getLibros, reservarLibro, getCurrentUser, signOut } from '@/lib/supabas
 export default function BibliotecaClient() {
     const router = useRouter();
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+    const [busqueda, setBusqueda] = useState('');
     const [libros, setLibros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -100,9 +101,16 @@ export default function BibliotecaClient() {
         'Eclesiología'
     ];
 
-    const librosFiltrados = categoriaSeleccionada
-        ? libros.filter(libro => libro.categoria === categoriaSeleccionada)
-        : libros;
+    const librosFiltrados = libros.filter(libro => {
+        const matchesCategoria = categoriaSeleccionada ? libro.categoria === categoriaSeleccionada : true;
+        
+        const search = (busqueda || '').toLowerCase();
+        const titulo = (libro.titulo || '').toLowerCase();
+        const autor = (libro.autor || '').toLowerCase();
+        const matchesSearch = titulo.includes(search) || autor.includes(search);
+        
+        return matchesCategoria && matchesSearch;
+    });
 
     const handleLogout = async () => {
         await signOut();
@@ -124,6 +132,17 @@ export default function BibliotecaClient() {
                         <i className="bi bi-person-check"></i> Bienvenido, {user.user_metadata?.nombre || user.email}
                     </div>
                 )}
+
+                {/* Buscador */}
+                <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+                    <input 
+                        type="text" 
+                        placeholder="Buscar libro por nombre o autor..." 
+                        style={{ padding: '0.8rem', width: '100%', maxWidth: '600px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem' }}
+                        value={busqueda} 
+                        onChange={(e) => setBusqueda(e.target.value)} 
+                    />
+                </div>
 
                 {/* Filtro de categorías */}
                 <div className={styles.filtroContainer}>
