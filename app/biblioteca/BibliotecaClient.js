@@ -6,7 +6,7 @@ import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import styles from "./biblioteca.module.css";
-import { getLibros, reservarLibro, getCurrentUser, signOut, getReservasUsuario } from '@/lib/supabase';
+import { getLibros, reservarLibro, getCurrentUser, signOut, getReservasUsuario, devolverLibro } from '@/lib/supabase';
 
 export default function BibliotecaClient() {
     const router = useRouter();
@@ -19,6 +19,7 @@ export default function BibliotecaClient() {
     const [userRole, setUserRole] = useState(null);
     const [reservando, setReservando] = useState(null);
     const [misReservas, setMisReservas] = useState([]);
+    const [devolviendo, setDevolviendo] = useState(null);
 
     // Cargar libros y usuario
     useEffect(() => {
@@ -100,6 +101,19 @@ export default function BibliotecaClient() {
         setReservando(null);
     };
 
+    const handleDevolver = async (reservaId, libroId) => {
+        if (!confirm('¿Estás seguro de que quieres devolver este libro?')) return;
+        setDevolviendo(reservaId);
+        const { error } = await devolverLibro(reservaId, libroId);
+        if (error) {
+            alert('Error al devolver: ' + error.message);
+        } else {
+            alert('¡Libro devuelto exitosamente!');
+            cargarDatos();
+        }
+        setDevolviendo(null);
+    };
+
     const librosFiltrados = libros.filter(libro => {
         const normalize = (str) => (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
         const search = normalize(busqueda);
@@ -149,9 +163,18 @@ export default function BibliotecaClient() {
                                     <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#666' }}>
                                         <strong>Estado:</strong> {res.estado === 'activa' ? 'Activa' : 'Devuelto'}
                                     </p>
-                                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>
+                                    <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: '#666' }}>
                                         <strong>Vence:</strong> {res.vencimiento ? new Date(res.vencimiento).toLocaleDateString('es-CL') : 'No definido'}
                                     </p>
+                                    {res.estado === 'activa' && (
+                                        <button 
+                                            onClick={() => handleDevolver(res.id, res.libro_id)}
+                                            disabled={devolviendo === res.id}
+                                            style={{ marginTop: '0.5rem', padding: '0.4rem 0.8rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '500' }}
+                                        >
+                                            {devolviendo === res.id ? 'Devolviendo...' : 'Marcar como Devuelto'}
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
