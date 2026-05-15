@@ -25,6 +25,24 @@ export default function HomeClient() {
         setConfig(configMap);
     };
 
+    const getEmbedUrl = (url) => {
+        if (!url) return null;
+        if (url.includes('youtube.com/embed/') || url.includes('youtube-nocookie.com/embed/')) return url;
+        
+        let videoId = '';
+        if (url.includes('youtube.com/watch?v=')) {
+            videoId = url.split('v=')[1].split('&')[0];
+        } else if (url.includes('youtu.be/')) {
+            videoId = url.split('youtu.be/')[1].split('?')[0];
+        } else if (url.includes('youtube.com/playlist?list=')) {
+            const listId = url.split('list=')[1].split('&')[0];
+            return `https://www.youtube.com/embed/videoseries?list=${listId}`;
+        }
+
+        if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+        return url;
+    };
+
     const loadUser = async () => {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
@@ -75,7 +93,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src={config.video_dominical || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"}
+                                    src={getEmbedUrl(config.video_dominical) || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"}
                                     allowFullScreen
                                     title="Servicio Dominical"
                                 />
@@ -89,7 +107,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src={config.video_credo || "https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"}
+                                    src={getEmbedUrl(config.video_credo) || "https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"}
                                     allowFullScreen
                                     title="El credo"
                                 />
@@ -103,7 +121,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src={config.video_estudio || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"}
+                                    src={getEmbedUrl(config.video_estudio) || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"}
                                     allowFullScreen
                                     title="Estudio Bíblico"
                                 />

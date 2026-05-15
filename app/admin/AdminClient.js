@@ -602,29 +602,43 @@ export default function AdminClient({ user }) {
                                     </div>
 
                                     <div className={styles.configCard}>
-                                        <h3>📽️ Videos (YouTube Embed)</h3>
-                                        <p>Video Servicio Dominical</p>
-                                        <input 
-                                            className={styles.input} 
-                                            value={config.video_dominical || ''} 
-                                            onChange={e => setConfig({...config, video_dominical: e.target.value})}
-                                            onBlur={e => handleSaveConfig('video_dominical', e.target.value)}
-                                            placeholder="https://www.youtube.com/embed/..."
-                                        />
-                                        <p>Video El Credo</p>
-                                        <input 
-                                            className={styles.input} 
-                                            value={config.video_credo || ''} 
-                                            onChange={e => setConfig({...config, video_credo: e.target.value})}
-                                            onBlur={e => handleSaveConfig('video_credo', e.target.value)}
-                                        />
-                                        <p>Video Estudio Bíblico</p>
-                                        <input 
-                                            className={styles.input} 
-                                            value={config.video_estudio || ''} 
-                                            onChange={e => setConfig({...config, video_estudio: e.target.value})}
-                                            onBlur={e => handleSaveConfig('video_estudio', e.target.value)}
-                                        />
+                                        <h3>📽️ Videos (YouTube)</h3>
+                                        <div className={styles.configField}>
+                                            <label>Servicio Dominical</label>
+                                            <div className={styles.inputGroup}>
+                                                <input 
+                                                    className={styles.input} 
+                                                    value={config.video_dominical || ''} 
+                                                    onChange={e => setConfig({...config, video_dominical: e.target.value})}
+                                                    placeholder="Enlace de YouTube o Lista"
+                                                />
+                                                <button onClick={() => handleSaveConfig('video_dominical', config.video_dominical)} className={styles.btnSave}>Guardar</button>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.configField}>
+                                            <label>El Credo</label>
+                                            <div className={styles.inputGroup}>
+                                                <input 
+                                                    className={styles.input} 
+                                                    value={config.video_credo || ''} 
+                                                    onChange={e => setConfig({...config, video_credo: e.target.value})}
+                                                />
+                                                <button onClick={() => handleSaveConfig('video_credo', config.video_credo)} className={styles.btnSave}>Guardar</button>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.configField}>
+                                            <label>Estudio Bíblico</label>
+                                            <div className={styles.inputGroup}>
+                                                <input 
+                                                    className={styles.input} 
+                                                    value={config.video_estudio || ''} 
+                                                    onChange={e => setConfig({...config, video_estudio: e.target.value})}
+                                                />
+                                                <button onClick={() => handleSaveConfig('video_estudio', config.video_estudio)} className={styles.btnSave}>Guardar</button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className={styles.configCard}>
