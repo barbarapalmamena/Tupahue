@@ -346,7 +346,28 @@ export default function AdminClient({ user }) {
                                                     <td>{res.libros?.titulo}</td>
                                                     <td>{res.estado}</td>
                                                     <td>
-                                                        </button>
+                                                        <div className={styles.actionButtons}>
+                                                            <button 
+                                                                onClick={() => handleSendReminder(res.id)}
+                                                                className={styles.btnReminder}
+                                                                title="Enviar recordatorio por email"
+                                                            >
+                                                                <i className="bi bi-envelope"></i>
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => { 
+                                                                    if(confirm('¿Eliminar esta reserva?')) {
+                                                                        eliminarReserva(res.id, res.libro_id).then(({error}) => {
+                                                                            if (error) alert('Error: ' + error.message);
+                                                                            else fetchReservas();
+                                                                        });
+                                                                    }
+                                                                }} 
+                                                                className={styles.btnDelete}
+                                                            >
+                                                                <i className="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -587,7 +608,68 @@ export default function AdminClient({ user }) {
                                     <h2>{editingMinisterioId ? '✏️ Editar Ministerio' : '🤝 Nuevo Ministerio'}</h2>
                                     <form onSubmit={handleCrearMinisterio}>
                                         <div className={styles.formRow}>
-                                            <input className={styles.input} value={newMinisterio.nombre} onChange={e => setNewMinisterio({...newMinisterio, nombre: e.target.value})} placeholder="Nombre del Ministerio" required />
+                                            <input className={styles.input} value={newMinisterio.nombre} onChange={e => setNewMinisterio({...newMinisterio, nombre: e.target.value})}
+
+                        {activeTab === 'usuarios' && (
+                            <div className={styles.articlesSection}>
+                                <div className={styles.listSection}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <h2>👥 Gestión de Usuarios</h2>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <i className="bi bi-search" style={{ color: '#666' }}></i>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Buscar usuario por nombre o email..." 
+                                                className={styles.input} 
+                                                style={{ maxWidth: '300px', margin: 0 }}
+                                                value={busquedaUsuario} 
+                                                onChange={(e) => setBusquedaUsuario(e.target.value)} 
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={styles.tableContainer}>
+                                        <table className={styles.table}>
+                                            <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Cambiar Rol</th></tr></thead>
+                                            <tbody>
+                                                {usuarios.filter(u => {
+                                                    const search = busquedaUsuario.toLowerCase();
+                                                    return u.nombre.toLowerCase().includes(search) || u.email.toLowerCase().includes(search);
+                                                }).map(u => (
+                                                    <tr key={u.id}>
+                                                        <td>{u.nombre}</td>
+                                                        <td>{u.email}</td>
+                                                        <td>
+                                                            <span style={{ 
+                                                                padding: '4px 12px', 
+                                                                borderRadius: '20px', 
+                                                                fontSize: '0.8rem',
+                                                                fontWeight: 'bold',
+                                                                backgroundColor: u.rol === 'admin' ? '#3c4d6b' : '#e9ecef',
+                                                                color: u.rol === 'admin' ? 'white' : '#495057'
+                                                            }}>
+                                                                {u.rol === 'admin' ? '🛡️ ADMIN' : '👤 USUARIO'}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <select 
+                                                                className={styles.input} 
+                                                                style={{ padding: '0.4rem', margin: 0, fontSize: '0.85rem', width: '150px' }}
+                                                                value={u.rol}
+                                                                disabled={actualizandoRol === u.id || u.id === user.id}
+                                                                onChange={(e) => handleUpdateRol(u.id, e.target.value)}
+                                                            >
+                                                                <option value="user">Usuario</option>
+                                                                <option value="admin">Administrador</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )} placeholder="Nombre del Ministerio" required />
                                             <input className={styles.input} value={newMinisterio.encargado} onChange={e => setNewMinisterio({...newMinisterio, encargado: e.target.value})} placeholder="Encargado" required />
                                         </div>
                                         <textarea className={styles.textarea} value={newMinisterio.descripcion} onChange={e => setNewMinisterio({...newMinisterio, descripcion: e.target.value})} placeholder="Descripción" required />
