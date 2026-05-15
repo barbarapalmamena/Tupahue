@@ -46,7 +46,7 @@ export default function AdminClient({ user }) {
     
     // Estados para Ministerios
     const [ministerios, setMinisterios] = useState([]);
-    const [newMinisterio, setNewMinisterio] = useState({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
+    const [newMinisterio, setNewMinisterio] = useState({ nombre: '', descripcion: '', encargado: '', categoria: 'general', imagen: '' });
     const [subiendoImagen, setSubiendoImagen] = useState(false);
     const [archivoImagen, setArchivoImagen] = useState(null);
     const [guardandoMinisterio, setGuardandoMinisterio] = useState(false);
@@ -252,7 +252,7 @@ export default function AdminClient({ user }) {
                 await crearMinisterio({ ...newMinisterio, imagen: imagenUrl });
                 alert('✅ Ministerio creado');
             }
-            setNewMinisterio({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
+            setNewMinisterio({ nombre: '', descripcion: '', encargado: '', categoria: 'general', imagen: '' });
             setArchivoImagen(null);
             // Limpiar el input de tipo file manualmente
             const fileInput = document.getElementById('ministerioImagen');
@@ -271,7 +271,6 @@ export default function AdminClient({ user }) {
             descripcion: m.descripcion, 
             encargado: m.encargado || '', 
             categoria: m.categoria || 'general', 
-            icono: m.icono || 'bi-star',
             imagen: m.imagen || ''
         });
         setEditingMinisterioId(m.id);
@@ -655,14 +654,8 @@ export default function AdminClient({ user }) {
                                                 <option value="general">General</option>
                                                 <option value="mision">Misión</option>
                                             </select>
-                                            <input 
-                                                className={styles.input} 
-                                                value={newMinisterio.icono} 
-                                                onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} 
-                                                placeholder="Icono (ej: bi-heart)" 
-                                            />
                                             <div style={{ flex: 1 }}>
-                                                <label style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Subir Foto (opcional):</label>
+                                                <label style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Subir Imagen:</label>
                                                 <input 
                                                     id="ministerioImagen"
                                                     type="file" 
@@ -672,9 +665,6 @@ export default function AdminClient({ user }) {
                                                     onChange={e => setArchivoImagen(e.target.files[0])} 
                                                 />
                                             </div>
-                                        </div>
-                                        <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-                                            💡 <strong>Iconos:</strong> Usa nombres de <a href="https://icons.getbootstrap.com/" target="_blank" rel="noreferrer">Bootstrap Icons</a> (ej: bi-heart, bi-book, bi-people, bi-star).
                                         </div>
                                         <div style={{ display: 'flex', gap: '1rem' }}>
                                             <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio || subiendoImagen}>
