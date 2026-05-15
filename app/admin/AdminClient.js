@@ -83,14 +83,21 @@ export default function AdminClient({ user }) {
     async function fetchDashboardStats() {
         setLoading(true);
         try {
-            const { data: reservas } = await supabase.from('reservas').select('id, estado, user_id');
-            const { data: users } = await supabase.from('usuarios').select('id');
+            // Usamos queries separadas y manejamos errores individualmente
+            const { count: totalReservas } = await supabase.from('reservas').select('*', { count: 'exact', head: true });
+            const { count: activos } = await supabase.from('reservas').select('*', { count: 'exact', head: true }).eq('estado', 'activa');
+            const { count: usuariosCount } = await supabase.from('usuarios').select('*', { count: 'exact', head: true });
+            
             setStats({
-                totalReservas: reservas?.length || 0,
-                activos: reservas?.filter(r => r.estado === 'activa').length || 0,
-                usuarios: users?.length || 0
+                totalReservas: totalReservas || 0,
+                activos: activos || 0,
+                usuarios: usuariosCount || 0
             });
-        } catch (error) { console.error(error); } finally { setLoading(false); }
+        } catch (error) { 
+            console.error('Error fetching dashboard stats:', error); 
+        } finally { 
+            setLoading(false); 
+        }
     }
 
     async function fetchUsuarios() {
