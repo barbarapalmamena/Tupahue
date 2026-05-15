@@ -15,7 +15,7 @@ export default function NosotrosClient() {
             {/* Banner */}
             <section
                 className={styles.hero}
-                style={{ backgroundImage: "url('/img/nosotros.jpeg')" }}
+                style={{ backgroundImage: "url('/img/inicio.jpg')" }}
             >
             </section>
 
