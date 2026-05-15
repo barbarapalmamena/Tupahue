@@ -236,14 +236,34 @@ export default function AdminClient({ user }) {
         let imagenUrl = newMinisterio.imagen;
 
         if (archivoImagen) {
-            setSubiendoImagen(true);
-            const { data, error } = await uploadMinisterioImagen(archivoImagen);
-            if (error) {
-                alert('Error al subir imagen: ' + error.message);
-                setSubiendoImagen(false);
+            // Validar tamaño (máximo 5MB)
+            if (archivoImagen.size > 5 * 1024 * 1024) {
+                alert('La imagen es demasiado grande (máximo 5MB)');
+                setGuardandoMinisterio(false);
                 return;
             }
+
+            setSubiendoImagen(true);
+            console.log("Llamando a uploadMinisterioImagen...");
+            const { data, error } = await uploadMinisterioImagen(archivoImagen);
+            
+            if (error) {
+                console.error("Error devuelto por uploadMinisterioImagen:", error);
+                alert('Error al subir imagen: ' + (error.message || 'Error desconocido'));
+                setSubiendoImagen(false);
+                setGuardandoMinisterio(false);
+                return;
+            }
+            
+            if (!data?.publicUrl) {
+                alert('No se pudo obtener la URL de la imagen subida');
+                setSubiendoImagen(false);
+                setGuardandoMinisterio(false);
+                return;
+            }
+
             imagenUrl = data.publicUrl;
+            console.log("Imagen subida con éxito, URL:", imagenUrl);
         }
 
         try {
