@@ -230,22 +230,62 @@ export default function AdminClient({ user }) {
         }
     };
 
+    const compressImage = async (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new window.Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 1200; // Reducimos el ancho máximo para ahorrar espacio
+                    const MAX_HEIGHT = 1200;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob((blob) => {
+                        const compressedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now(),
+                        });
+                        resolve(compressedFile);
+                    }, 'image/jpeg', 0.7); // 0.7 calidad (buena relación peso/calidad)
+                };
+            };
+        });
+    };
+
     const handleCrearMinisterio = async (e) => {
         e.preventDefault();
         setGuardandoMinisterio(true);
         let imagenUrl = newMinisterio.imagen;
 
         if (archivoImagen) {
-            // Validar tamaño (máximo 10MB)
-            if (archivoImagen.size > 10 * 1024 * 1024) {
-                alert('La imagen es demasiado grande (máximo 10MB)');
-                setGuardandoMinisterio(false);
-                return;
-            }
-
             setSubiendoImagen(true);
-            console.log("Llamando a uploadMinisterioImagen...");
-            const { data, error } = await uploadMinisterioImagen(archivoImagen);
+            console.log("Comprimiendo imagen...");
+            const imagenAceptable = await compressImage(archivoImagen);
+            console.log("Imagen comprimida. Tamaño original:", (archivoImagen.size/1024/1024).toFixed(2), "MB. Nuevo tamaño:", (imagenAceptable.size/1024/1024).toFixed(2), "MB");
+
+            console.log("Llamando a uploadMinisterioImagen vía API...");
+            const { data, error } = await uploadMinisterioImagen(imagenAceptable);
             
             if (error) {
                 console.error("Error devuelto por uploadMinisterioImagen:", error);
