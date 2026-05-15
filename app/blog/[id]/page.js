@@ -7,13 +7,18 @@ import { notFound } from 'next/navigation';
 export const revalidate = 0; // Para que se actualice siempre
 
 async function getArticle(id) {
+    console.log("Buscando artículo con ID:", id);
     const { data, error } = await supabase
         .from('articulos')
         .select('*')
         .eq('id', id)
         .single();
     
-    if (error || !data) return null;
+    if (error) {
+        console.error("Error al buscar artículo:", error);
+        return null;
+    }
+    console.log("Artículo encontrado:", data ? data.titulo : "Ninguno");
     return data;
 }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -165,9 +166,9 @@ export default function HomeClient() {
                                         <p className={styles.articleText}>
                                             {articulo.contenido.replace(/<[^>]*>/g, '').substring(0, 150)}...
                                         </p>
-                                        <a href={`/blog/${articulo.id}`} className={styles.readMoreBtn}>
+                                        <Link href={`/blog/${articulo.id}`} className={styles.readMoreBtn}>
                                             Leer más <i className="bi bi-arrow-right"></i>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </article>
                             ))}
