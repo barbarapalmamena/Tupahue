@@ -163,12 +163,10 @@ export default function HomeClient() {
                                             })}
                                         </div>
                                         <h3 className={styles.articleTitle}>{articulo.titulo}</h3>
-                                        <p className={styles.articleText}>
-                                            {articulo.contenido.replace(/<[^>]*>/g, '').substring(0, 150)}...
-                                        </p>
-                                        <Link href={`/blog/${articulo.id}`} className={styles.readMoreBtn}>
-                                            Leer más <i className="bi bi-arrow-right"></i>
-                                        </Link>
+                                        <div 
+                                            className={styles.articleText}
+                                            dangerouslySetInnerHTML={{ __html: articulo.contenido }}
+                                        />
                                     </div>
                                 </article>
                             ))}
