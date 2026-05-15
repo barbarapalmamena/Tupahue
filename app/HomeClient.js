@@ -6,15 +6,24 @@ import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import styles from "./page.module.css";
-import { getCurrentUser, signOut } from '@/lib/supabase';
+import { getCurrentUser, signOut, supabase } from '@/lib/supabase';
 
 export default function HomeClient() {
     const router = useRouter();
     const [user, setUser] = useState(null);
+    const [config, setConfig] = useState({});
 
     useEffect(() => {
         loadUser();
+        fetchConfig();
     }, []);
+
+    const fetchConfig = async () => {
+        const { data } = await supabase.from('configuracion').select('*');
+        const configMap = {};
+        data?.forEach(item => { configMap[item.clave] = item.valor; });
+        setConfig(configMap);
+    };
 
     const loadUser = async () => {
         const currentUser = await getCurrentUser();
@@ -66,7 +75,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"
+                                    src={config.video_dominical || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSweWQtT-WZp5OwIjjP_hFKh6"}
                                     allowFullScreen
                                     title="Servicio Dominical"
                                 />
@@ -80,7 +89,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"
+                                    src={config.video_credo || "https://www.youtube.com/embed/jMQa-1Gk3a4?si=EN8szu3jncPMrSAL"}
                                     allowFullScreen
                                     title="El credo"
                                 />
@@ -94,7 +103,7 @@ export default function HomeClient() {
                         <div className={styles.videoCard}>
                             <div className={styles.videoContainer}>
                                 <iframe
-                                    src="https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"
+                                    src={config.video_estudio || "https://www.youtube.com/embed/videoseries?list=PLmShX6jrCSwcOTbXLuwmtWHJdXPLnXI_k"}
                                     allowFullScreen
                                     title="Estudio Bíblico"
                                 />
