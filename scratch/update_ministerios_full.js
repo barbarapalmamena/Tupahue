@@ -6,8 +6,8 @@ const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.
 const ministeriosCompletos = [
     // PASTORAL
     { nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García', descripcion: 'Liderazgo pastoral enfocado en el cuidado espiritual y la guía doctrinal de nuestra congregación.', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'pastoral', imagen: '/img/familia1.jpg' },
-    { nombre: 'Anciano - Pablo Cosque', descripcion: 'Liderazgo laico comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/familia2.jpg' },
-    { nombre: 'Anciano - Carlos Garcés', descripcion: 'Liderazgo laico dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/familia3.jpg' },
+    { nombre: 'Anciano - Pablo Cosque', descripcion: 'Liderazgo comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/familia2.jpg' },
+    { nombre: 'Anciano - Carlos Garcés', descripcion: 'Liderazgo  dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/familia3.jpg' },
 
     // OTROS
     { nombre: 'Ministerio de Matrimonios', descripcion: 'Un espacio de encuentro y crecimiento espiritual para los matrimonios.', encargado: 'Pr. Raúl Laguna y Nena García', icono: 'bi-heart', categoria: 'general' },
