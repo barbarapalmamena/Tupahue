@@ -12,11 +12,22 @@ export default function HomeClient() {
     const router = useRouter();
     const [user, setUser] = useState(null);
     const [config, setConfig] = useState({});
+    const [articulos, setArticulos] = useState([]);
 
     useEffect(() => {
         loadUser();
         fetchConfig();
+        fetchArticulos();
     }, []);
+
+    const fetchArticulos = async () => {
+        const { data } = await supabase
+            .from('articulos')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(3);
+        setArticulos(data || []);
+    };
 
     const fetchConfig = async () => {
         const { data } = await supabase.from('configuracion').select('*');
@@ -133,6 +144,37 @@ export default function HomeClient() {
                     </div>
                 </div>
             </section>
+
+            {/* Blog / Palabra de Vida */}
+            {articulos.length > 0 && (
+                <section className={styles.articlesSection}>
+                    <div className={styles.container}>
+                        <h2 className={styles.sectionTitle}>Palabra de Vida</h2>
+                        <div className={styles.articlesGrid}>
+                            {articulos.map((articulo) => (
+                                <article key={articulo.id} className={styles.articleCard}>
+                                    <div className={styles.articleBody}>
+                                        <div className={styles.articleMeta}>
+                                            {new Date(articulo.created_at).toLocaleDateString('es-ES', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}
+                                        </div>
+                                        <h3 className={styles.articleTitle}>{articulo.titulo}</h3>
+                                        <p className={styles.articleText}>
+                                            {articulo.contenido.replace(/<[^>]*>/g, '').substring(0, 150)}...
+                                        </p>
+                                        <a href={`/blog/${articulo.id}`} className={styles.readMoreBtn}>
+                                            Leer más <i className="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Encuentros */}
             <section className={styles.encuentrosSection}>
