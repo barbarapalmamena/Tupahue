@@ -341,11 +341,6 @@ export default function AdminClient({ user }) {
         generatePDF('Reporte de Préstamos de Biblioteca', ['Usuario', 'Libro', 'Estado', 'Fecha'], data, 'prestamos_biblioteca');
     };
 
-    const handleReportUsuarios = () => {
-        const data = usuarios.map(u => [u.nombre, u.email, u.rol]);
-        generatePDF('Reporte de Usuarios Registrados', ['Nombre', 'Email', 'Rol'], data, 'usuarios_registrados');
-    };
-
     const handleGenerateReport = async () => {
         try {
             const secret = process.env.NEXT_PUBLIC_CRON_SECRET || 'test';
@@ -354,13 +349,7 @@ export default function AdminClient({ user }) {
             });
             const result = await response.json();
             if (result.success) {
-                const data = [
-                    ['Mes', result.stats.mes],
-                    ['Total Reservas', result.stats.totalReservas.toString()],
-                    ['Usuarios Únicos', result.stats.usuariosUnicos.toString()]
-                ];
-                generatePDF('Reporte Mensual Estadístico', ['Métrica', 'Valor'], data, 'reporte_mensual');
-                alert('✅ Reporte generado y descargado');
+                alert(`📊 Reporte Generado:\n- Mes: ${result.stats.mes}\n- Reservas: ${result.stats.totalReservas}\n- Usuarios: ${result.stats.usuariosUnicos}`);
             }
         } catch (error) {
             alert('Error al generar reporte');
@@ -376,9 +365,6 @@ export default function AdminClient({ user }) {
                         <h1 className={styles.title}>Panel de Control</h1>
                         <p className={styles.subtitle}>Gestiona el contenido, la biblioteca y los ministerios de la iglesia</p>
                     </div>
-                    <button className={styles.reportBtn} onClick={handleGenerateReport}>
-                        <i className="bi bi-file-earmark-bar-graph"></i> Reporte Mensual
-                    </button>
                 </div>
 
                 <div className={styles.tabs}>
@@ -828,11 +814,6 @@ export default function AdminClient({ user }) {
                                     <i className="bi bi-file-pdf" style={{ fontSize: '2.5rem', color: '#dc3545' }}></i>
                                     <h3>Préstamos</h3>
                                     <p>Descargar historial de reservas</p>
-                                </div>
-                                <div className={styles.configCard} style={{ cursor: 'pointer' }} onClick={handleReportUsuarios}>
-                                    <i className="bi bi-file-pdf" style={{ fontSize: '2.5rem', color: '#dc3545' }}></i>
-                                    <h3>Usuarios</h3>
-                                    <p>Descargar lista de usuarios</p>
                                 </div>
                             </div>
                         )}
