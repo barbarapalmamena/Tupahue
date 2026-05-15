@@ -1,0 +1,105 @@
+.pageContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding-top: 100px;
+}
+
+.main {
+    flex: 1;
+    padding: 4rem 1rem;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.separator {
+    color: #dee2e6;
+}
+
+.author {
+    font-weight: 600;
+    color: #3c4d6b;
+}
+
+.title {
+    font-size: 3rem;
+    color: #2c3e50;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.content {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 4rem;
+}
+
+.content p {
+    margin-bottom: 1.5rem;
+}
+
+.content h2, .content h3 {
+    color: #3c4d6b;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 2rem 0;
+}
+
+.footer {
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+    margin-top: 2rem;
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3c4d6b;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s;
+}
+
+.backBtn:hover {
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .main {
+        padding: 2rem 1rem;
+    }
+}
