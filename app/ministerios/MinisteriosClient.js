@@ -18,24 +18,24 @@ export default function MinisteriosClient() {
             } else {
                 // Fallback a datos estáticos si no hay en la DB
                 setMinisterios([
-                    { id: 1, nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'pastoral', imagen: '/img/familia1.jpg' },
-                    { id: 2, nombre: 'Anciano - Pablo Cosque', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/familia2.jpg' },
-                    { id: 3, nombre: 'Anciano - Carlos Garcés', descripcion: 'Pon algo aquí', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/familia3.jpg' },
-                    { id: 4, nombre: 'Ministerio de Matrimonios', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'general' },
-                    { id: 5, nombre: 'Ministerio de Varones', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna', categoria: 'general' },
-                    { id: 6, nombre: 'Ministerio de Damas', descripcion: 'Pon algo aquí', encargado: 'Nena García', categoria: 'general' },
-                    { id: 7, nombre: 'Ministerio de Jóvenes', descripcion: 'Pon algo aquí', encargado: 'Erwin Mena y Pía Hernandez', categoria: 'general' },
-                    { id: 8, nombre: 'Ministerio Infantil', descripcion: 'Pon algo aquí', encargado: 'Nena Garcia', categoria: 'general' },
-                    { id: 9, nombre: 'Ministerio de Alabanza', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'general' },
-                    { id: 10, nombre: 'Ministerio de Misericordia', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general' },
-                    { id: 11, nombre: 'Ministerio de Hospitalidad', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general' },
-                    { id: 12, nombre: 'Ministerio de Misiones y evangelismo', descripcion: 'Pon algo aquí', encargado: 'N/A', categoria: 'general' },
-                    { id: 13, nombre: 'Ministerio de Aseo', descripcion: 'Pon algo aquí', encargado: 'Jocelin', categoria: 'general' },
-                    { id: 14, nombre: 'Ministerio de Biblioteca', descripcion: 'Pon algo aquí', encargado: 'Marcelo Canales', categoria: 'general' },
-                    { id: 15, nombre: 'Ministerio de Audiovisual', descripcion: 'Pon algo aquí', encargado: 'Marcelo Miranda', categoria: 'general' },
-                    { id: 16, nombre: 'Ministerio de Proyección', descripcion: 'Pon algo aquí', encargado: 'Maria Jesus Ruíz', categoria: 'general' },
-                    { id: 17, nombre: 'Ministerio de Redes Sociales', descripcion: 'Pon algo aquí', encargado: 'Kamila Guaran y Gabrielle Natal', categoria: 'general' },
-                    { id: 18, nombre: 'Ministerio de Tesoreria', descripcion: 'Pon algo aquí', encargado: 'Susana Silva', categoria: 'general' }
+                    { id: 1, nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'pastoral', imagen: '/img/LogoTupahue.png' },
+                    { id: 2, nombre: 'Anciano - Pablo Cosque', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/LogoTupahue.png' },
+                    { id: 3, nombre: 'Anciano - Carlos Garcés', descripcion: 'Pon algo aquí', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/LogoTupahue.png' },
+                    { id: 4, nombre: 'Ministerio de Matrimonios', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 5, nombre: 'Ministerio de Varones', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 6, nombre: 'Ministerio de Damas', descripcion: 'Pon algo aquí', encargado: 'Nena García', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 7, nombre: 'Ministerio de Jóvenes', descripcion: 'Pon algo aquí', encargado: 'Erwin Mena y Pía Hernandez', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 8, nombre: 'Ministerio Infantil', descripcion: 'Pon algo aquí', encargado: 'Nena Garcia', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 9, nombre: 'Ministerio de Alabanza', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 10, nombre: 'Ministerio de Misericordia', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 11, nombre: 'Ministerio de Hospitalidad', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 12, nombre: 'Ministerio de Misiones y evangelismo', descripcion: 'Pon algo aquí', encargado: 'N/A', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 13, nombre: 'Ministerio de Aseo', descripcion: 'Pon algo aquí', encargado: 'Jocelin', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 14, nombre: 'Ministerio de Biblioteca', descripcion: 'Pon algo aquí', encargado: 'Marcelo Canales', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 15, nombre: 'Ministerio de Audiovisual', descripcion: 'Pon algo aquí', encargado: 'Marcelo Miranda', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 16, nombre: 'Ministerio de Proyección', descripcion: 'Pon algo aquí', encargado: 'Maria Jesus Ruíz', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 17, nombre: 'Ministerio de Redes Sociales', descripcion: 'Pon algo aquí', encargado: 'Kamila Guaran y Gabrielle Natal', categoria: 'general', imagen: '/img/LogoTupahue.png' },
+                    { id: 18, nombre: 'Ministerio de Tesoreria', descripcion: 'Pon algo aquí', encargado: 'Susana Silva', categoria: 'general', imagen: '/img/LogoTupahue.png' }
                 ]);
             }
             setLoading(false);
