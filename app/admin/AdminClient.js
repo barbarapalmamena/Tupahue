@@ -23,6 +23,8 @@ import {
     actualizarRolUsuario
 } from '../../lib/supabase';
 import { supabase, uploadMinisterioImagen } from '@/lib/supabase';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import styles from './admin.module.css';
 
 export default function AdminClient({ user }) {
@@ -80,6 +82,7 @@ export default function AdminClient({ user }) {
         else if (activeTab === 'configuracion') fetchConfig();
         else if (activeTab === 'ministerios') fetchMinisterios();
         else if (activeTab === 'usuarios') fetchUsuarios();
+        else if (activeTab === 'reportes') { fetchLibros(); fetchReservas(); fetchUsuarios(); }
     }, [activeTab]);
 
     async function fetchDashboardStats() {
@@ -309,6 +312,40 @@ export default function AdminClient({ user }) {
         }
     };
 
+    const generatePDF = (title, headers, data, filename) => {
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text('Iglesia Tupahue', 14, 20);
+        doc.setFontSize(12);
+        doc.text(title, 14, 30);
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 14, 38);
+        
+        doc.autoTable({
+            startY: 45,
+            head: [headers],
+            body: data,
+            theme: 'striped',
+            headStyles: { fillColor: [60, 77, 107] }
+        });
+        
+        doc.save(`${filename}_${new Date().getTime()}.pdf`);
+    };
+
+    const handleReportInventario = () => {
+        const data = libros.map(l => [l.titulo, l.autor, l.cantidad]);
+        generatePDF('Reporte de Inventario de Libros', ['Título', 'Autor', 'Stock'], data, 'inventario_libros');
+    };
+
+    const handleReportPrestamos = () => {
+        const data = reservas.map(r => [r.usuario?.nombre || 'N/A', r.libros?.titulo || 'N/A', r.estado, new Date(r.created_at).toLocaleDateString('es-CL')]);
+        generatePDF('Reporte de Préstamos de Biblioteca', ['Usuario', 'Libro', 'Estado', 'Fecha'], data, 'prestamos_biblioteca');
+    };
+
+    const handleReportUsuarios = () => {
+        const data = usuarios.map(u => [u.nombre, u.email, u.rol]);
+        generatePDF('Reporte de Usuarios Registrados', ['Nombre', 'Email', 'Rol'], data, 'usuarios_registrados');
+    };
+
     const handleGenerateReport = async () => {
         try {
             const secret = process.env.NEXT_PUBLIC_CRON_SECRET || 'test';
@@ -317,7 +354,13 @@ export default function AdminClient({ user }) {
             });
             const result = await response.json();
             if (result.success) {
-                alert(`📊 Reporte Generado:\n- Mes: ${result.stats.mes}\n- Reservas: ${result.stats.totalReservas}\n- Usuarios: ${result.stats.usuariosUnicos}`);
+                const data = [
+                    ['Mes', result.stats.mes],
+                    ['Total Reservas', result.stats.totalReservas.toString()],
+                    ['Usuarios Únicos', result.stats.usuariosUnicos.toString()]
+                ];
+                generatePDF('Reporte Mensual Estadístico', ['Métrica', 'Valor'], data, 'reporte_mensual');
+                alert('✅ Reporte generado y descargado');
             }
         } catch (error) {
             alert('Error al generar reporte');
@@ -346,6 +389,7 @@ export default function AdminClient({ user }) {
                     <button className={`${styles.tabBtn} ${activeTab === 'configuracion' ? styles.active : ''}`} onClick={() => setActiveTab('configuracion')}>⚙️ Configuración</button>
                     <button className={`${styles.tabBtn} ${activeTab === 'ministerios' ? styles.active : ''}`} onClick={() => setActiveTab('ministerios')}>🤝 Ministerios</button>
                     <button className={`${styles.tabBtn} ${activeTab === 'usuarios' ? styles.active : ''}`} onClick={() => setActiveTab('usuarios')}>👥 Usuarios</button>
+                    <button className={`${styles.tabBtn} ${activeTab === 'reportes' ? styles.active : ''}`} onClick={() => setActiveTab('reportes')}>📊 Reportes</button>
                 </div>
 
                 {loading ? <div className={styles.loading}>Cargando...</div> : (
@@ -769,6 +813,26 @@ export default function AdminClient({ user }) {
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'reportes' && (
+                            <div className={styles.dashboardGrid}>
+                                <div className={styles.configCard} style={{ cursor: 'pointer' }} onClick={handleReportInventario}>
+                                    <i className="bi bi-file-pdf" style={{ fontSize: '2.5rem', color: '#dc3545' }}></i>
+                                    <h3>Inventario</h3>
+                                    <p>Descargar lista de libros</p>
+                                </div>
+                                <div className={styles.configCard} style={{ cursor: 'pointer' }} onClick={handleReportPrestamos}>
+                                    <i className="bi bi-file-pdf" style={{ fontSize: '2.5rem', color: '#dc3545' }}></i>
+                                    <h3>Préstamos</h3>
+                                    <p>Descargar historial de reservas</p>
+                                </div>
+                                <div className={styles.configCard} style={{ cursor: 'pointer' }} onClick={handleReportUsuarios}>
+                                    <i className="bi bi-file-pdf" style={{ fontSize: '2.5rem', color: '#dc3545' }}></i>
+                                    <h3>Usuarios</h3>
+                                    <p>Descargar lista de usuarios</p>
                                 </div>
                             </div>
                         )}
