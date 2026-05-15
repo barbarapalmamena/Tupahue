@@ -22,7 +22,7 @@ import {
     getUsuarios,
     actualizarRolUsuario
 } from '../../lib/supabase';
-import { supabase } from '@/lib/supabase';
+import { supabase, uploadMinisterioImagen } from '@/lib/supabase';
 import styles from './admin.module.css';
 
 export default function AdminClient({ user }) {
@@ -47,6 +47,8 @@ export default function AdminClient({ user }) {
     // Estados para Ministerios
     const [ministerios, setMinisterios] = useState([]);
     const [newMinisterio, setNewMinisterio] = useState({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
+    const [subiendoImagen, setSubiendoImagen] = useState(false);
+    const [archivoImagen, setArchivoImagen] = useState(null);
     const [guardandoMinisterio, setGuardandoMinisterio] = useState(false);
     const [editingMinisterioId, setEditingMinisterioId] = useState(null);
 
@@ -228,18 +230,39 @@ export default function AdminClient({ user }) {
     const handleCrearMinisterio = async (e) => {
         e.preventDefault();
         setGuardandoMinisterio(true);
+        let imagenUrl = newMinisterio.imagen;
+
+        if (archivoImagen) {
+            setSubiendoImagen(true);
+            const { data, error } = await uploadMinisterioImagen(archivoImagen);
+            if (error) {
+                alert('Error al subir imagen: ' + error.message);
+                setSubiendoImagen(false);
+                return;
+            }
+            imagenUrl = data.publicUrl;
+        }
+
         try {
             if (editingMinisterioId) {
-                await actualizarMinisterio(editingMinisterioId, newMinisterio);
+                await actualizarMinisterio(editingMinisterioId, { ...newMinisterio, imagen: imagenUrl });
                 alert('✅ Ministerio actualizado');
                 setEditingMinisterioId(null);
             } else {
-                await crearMinisterio(newMinisterio);
+                await crearMinisterio({ ...newMinisterio, imagen: imagenUrl });
                 alert('✅ Ministerio creado');
             }
             setNewMinisterio({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
+            setArchivoImagen(null);
+            // Limpiar el input de tipo file manualmente
+            const fileInput = document.getElementById('ministerioImagen');
+            if (fileInput) fileInput.value = '';
+            
             fetchMinisterios();
-        } catch (error) { alert(error.message); } finally { setGuardandoMinisterio(false); }
+        } catch (error) { alert(error.message); } finally { 
+            setGuardandoMinisterio(false); 
+            setSubiendoImagen(false);
+        }
     };
 
     const prepareEditMinisterio = (m) => {
@@ -632,11 +655,31 @@ export default function AdminClient({ user }) {
                                                 <option value="general">General</option>
                                                 <option value="mision">Misión</option>
                                             </select>
-                                            <input className={styles.input} value={newMinisterio.icono} onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} placeholder="Icono (ej: bi-heart)" />
-                                            <input className={styles.input} value={newMinisterio.imagen} onChange={e => setNewMinisterio({...newMinisterio, imagen: e.target.value})} placeholder="URL Imagen (para Pastoral)" />
+                                            <input 
+                                                className={styles.input} 
+                                                value={newMinisterio.icono} 
+                                                onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} 
+                                                placeholder="Icono (ej: bi-heart)" 
+                                            />
+                                            <div style={{ flex: 1 }}>
+                                                <label style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Subir Foto (opcional):</label>
+                                                <input 
+                                                    id="ministerioImagen"
+                                                    type="file" 
+                                                    accept="image/*"
+                                                    className={styles.input} 
+                                                    style={{ padding: '0.4rem' }}
+                                                    onChange={e => setArchivoImagen(e.target.files[0])} 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+                                            💡 <strong>Iconos:</strong> Usa nombres de <a href="https://icons.getbootstrap.com/" target="_blank" rel="noreferrer">Bootstrap Icons</a> (ej: bi-heart, bi-book, bi-people, bi-star).
                                         </div>
                                         <div style={{ display: 'flex', gap: '1rem' }}>
-                                            <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio}>{editingMinisterioId ? 'Actualizar' : 'Crear'}</button>
+                                            <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio || subiendoImagen}>
+                                                {subiendoImagen ? 'Subiendo...' : (editingMinisterioId ? 'Actualizar' : 'Crear')}
+                                            </button>
                                             {editingMinisterioId && <button type="button" onClick={() => {setEditingMinisterioId(null); setNewMinisterio({nombre:'',descripcion:'',encargado:'',categoria:'general',icono:'bi-star'})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
                                         </div>
                                     </form>
