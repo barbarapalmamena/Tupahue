@@ -332,11 +332,19 @@ export default function AdminClient({ user }) {
     };
 
     const handleReportInventario = () => {
+        if (libros.length === 0) {
+            alert('No hay libros en el inventario para generar el reporte.');
+            return;
+        }
         const data = libros.map(l => [l.titulo, l.autor, l.cantidad]);
         generatePDF('Reporte de Inventario de Libros', ['Título', 'Autor', 'Stock'], data, 'inventario_libros');
     };
 
     const handleReportPrestamos = () => {
+        if (reservas.length === 0) {
+            alert('No hay préstamos registrados para generar el reporte.');
+            return;
+        }
         const data = reservas.map(r => [r.usuario?.nombre || 'N/A', r.libros?.titulo || 'N/A', r.estado, new Date(r.created_at).toLocaleDateString('es-CL')]);
         generatePDF('Reporte de Préstamos de Biblioteca', ['Usuario', 'Libro', 'Estado', 'Fecha'], data, 'prestamos_biblioteca');
     };
