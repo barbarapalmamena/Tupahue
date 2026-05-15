@@ -18,24 +18,24 @@ export default function MinisteriosClient() {
             } else {
                 // Fallback a datos estáticos si no hay en la DB
                 setMinisterios([
-                    { id: 1, nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García', descripcion: 'Liderazgo pastoral enfocado en el cuidado espiritual y la guía doctrinal de nuestra congregación.', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'pastoral', imagen: '/img/familia1.jpg' },
-                    { id: 2, nombre: 'Anciano - Pablo Cosque', descripcion: 'Liderazgo laico comprometido con el gobierno y la sabiduría en la toma de decisiones de la iglesia.', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/familia2.jpg' },
-                    { id: 3, nombre: 'Anciano - Carlos Garcés', descripcion: 'Liderazgo laico dedicado al apoyo pastoral y el fortalecimiento de la comunidad de fe.', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/familia3.jpg' },
-                    { id: 4, nombre: 'Ministerio de Matrimonios', descripcion: 'Un espacio de encuentro y crecimiento espiritual para los matrimonios.', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'general' },
-                    { id: 5, nombre: 'Ministerio de Varones', descripcion: 'Formación bíblica y doctrinal para todas las edades.', encargado: 'Pr. Raúl Laguna', categoria: 'general' },
-                    { id: 6, nombre: 'Ministerio de Damas', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Nena García', categoria: 'general' },
-                    { id: 7, nombre: 'Ministerio de Jóvenes', descripcion: 'Formación bíblica y doctrinal para todas las edades.', encargado: 'Erwin Mena y Pía Hernandez', categoria: 'general' },
-                    { id: 8, nombre: 'Ministerio Infantil', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Nena Garcia', categoria: 'general' },
-                    { id: 9, nombre: 'Ministerio de Alabanza', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Pablo Cosque', categoria: 'general' },
-                    { id: 10, nombre: 'Ministerio de Misericordia', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Lolymar Padilla', categoria: 'general' },
-                    { id: 11, nombre: 'Ministerio de Hospitalidad', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Lolymar Padilla', categoria: 'general' },
-                    { id: 12, nombre: 'Ministerio de Misiones y evangelismo', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'N/A', categoria: 'general' },
-                    { id: 13, nombre: 'Ministerio de Aseo', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Jocelin', categoria: 'general' },
-                    { id: 14, nombre: 'Ministerio de Biblioteca', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Marcelo Canales', categoria: 'general' },
-                    { id: 15, nombre: 'Ministerio de Audiovisual', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Marcelo Miranda', categoria: 'general' },
-                    { id: 16, nombre: 'Ministerio de Proyección', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Maria Jesus Ruíz', categoria: 'general' },
-                    { id: 17, nombre: 'Ministerio de Redes Sociales', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Kamila Guaran y Gabrielle Natal', categoria: 'general' },
-                    { id: 18, nombre: 'Ministerio de Tesoreria', descripcion: 'Ayuda social y apoyo comunitario, reflejando el amor de Cristo.', encargado: 'Susana Silva', categoria: 'general' }
+                    { id: 1, nombre: 'Familia Pastoral - Pr. Raúl Laguna y Nena García', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'pastoral', imagen: '/img/familia1.jpg' },
+                    { id: 2, nombre: 'Anciano - Pablo Cosque', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'pastoral', imagen: '/img/familia2.jpg' },
+                    { id: 3, nombre: 'Anciano - Carlos Garcés', descripcion: 'Pon algo aquí', encargado: 'Carlos Garcés', categoria: 'pastoral', imagen: '/img/familia3.jpg' },
+                    { id: 4, nombre: 'Ministerio de Matrimonios', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna y Nena García', categoria: 'general' },
+                    { id: 5, nombre: 'Ministerio de Varones', descripcion: 'Pon algo aquí', encargado: 'Pr. Raúl Laguna', categoria: 'general' },
+                    { id: 6, nombre: 'Ministerio de Damas', descripcion: 'Pon algo aquí', encargado: 'Nena García', categoria: 'general' },
+                    { id: 7, nombre: 'Ministerio de Jóvenes', descripcion: 'Pon algo aquí', encargado: 'Erwin Mena y Pía Hernandez', categoria: 'general' },
+                    { id: 8, nombre: 'Ministerio Infantil', descripcion: 'Pon algo aquí', encargado: 'Nena Garcia', categoria: 'general' },
+                    { id: 9, nombre: 'Ministerio de Alabanza', descripcion: 'Pon algo aquí', encargado: 'Pablo Cosque', categoria: 'general' },
+                    { id: 10, nombre: 'Ministerio de Misericordia', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general' },
+                    { id: 11, nombre: 'Ministerio de Hospitalidad', descripcion: 'Pon algo aquí', encargado: 'Lolymar Padilla', categoria: 'general' },
+                    { id: 12, nombre: 'Ministerio de Misiones y evangelismo', descripcion: 'Pon algo aquí', encargado: 'N/A', categoria: 'general' },
+                    { id: 13, nombre: 'Ministerio de Aseo', descripcion: 'Pon algo aquí', encargado: 'Jocelin', categoria: 'general' },
+                    { id: 14, nombre: 'Ministerio de Biblioteca', descripcion: 'Pon algo aquí', encargado: 'Marcelo Canales', categoria: 'general' },
+                    { id: 15, nombre: 'Ministerio de Audiovisual', descripcion: 'Pon algo aquí', encargado: 'Marcelo Miranda', categoria: 'general' },
+                    { id: 16, nombre: 'Ministerio de Proyección', descripcion: 'Pon algo aquí', encargado: 'Maria Jesus Ruíz', categoria: 'general' },
+                    { id: 17, nombre: 'Ministerio de Redes Sociales', descripcion: 'Pon algo aquí', encargado: 'Kamila Guaran y Gabrielle Natal', categoria: 'general' },
+                    { id: 18, nombre: 'Ministerio de Tesoreria', descripcion: 'Pon algo aquí', encargado: 'Susana Silva', categoria: 'general' }
                 ]);
             }
             setLoading(false);
