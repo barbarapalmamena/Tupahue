@@ -46,7 +46,7 @@ export default function AdminClient({ user }) {
     
     // Estados para Ministerios
     const [ministerios, setMinisterios] = useState([]);
-    const [newMinisterio, setNewMinisterio] = useState({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star' });
+    const [newMinisterio, setNewMinisterio] = useState({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
     const [guardandoMinisterio, setGuardandoMinisterio] = useState(false);
     const [editingMinisterioId, setEditingMinisterioId] = useState(null);
 
@@ -237,13 +237,20 @@ export default function AdminClient({ user }) {
                 await crearMinisterio(newMinisterio);
                 alert('✅ Ministerio creado');
             }
-            setNewMinisterio({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star' });
+            setNewMinisterio({ nombre: '', descripcion: '', encargado: '', categoria: 'general', icono: 'bi-star', imagen: '' });
             fetchMinisterios();
         } catch (error) { alert(error.message); } finally { setGuardandoMinisterio(false); }
     };
 
     const prepareEditMinisterio = (m) => {
-        setNewMinisterio({ nombre: m.nombre, descripcion: m.descripcion, encargado: m.encargado || '', categoria: m.categoria || 'general', icono: m.icono || 'bi-star' });
+        setNewMinisterio({ 
+            nombre: m.nombre, 
+            descripcion: m.descripcion, 
+            encargado: m.encargado || '', 
+            categoria: m.categoria || 'general', 
+            icono: m.icono || 'bi-star',
+            imagen: m.imagen || ''
+        });
         setEditingMinisterioId(m.id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -625,7 +632,8 @@ export default function AdminClient({ user }) {
                                                 <option value="general">General</option>
                                                 <option value="mision">Misión</option>
                                             </select>
-                                            <input className={styles.input} value={newMinisterio.icono} onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} placeholder="Icono (bi-heart, bi-book...)" />
+                                            <input className={styles.input} value={newMinisterio.icono} onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} placeholder="Icono (ej: bi-heart)" />
+                                            <input className={styles.input} value={newMinisterio.imagen} onChange={e => setNewMinisterio({...newMinisterio, imagen: e.target.value})} placeholder="URL Imagen (para Pastoral)" />
                                         </div>
                                         <div style={{ display: 'flex', gap: '1rem' }}>
                                             <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio}>{editingMinisterioId ? 'Actualizar' : 'Crear'}</button>
