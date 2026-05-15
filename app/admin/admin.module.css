@@ -384,3 +384,31 @@
 .btnSave:hover {
     background-color: #0056b3;
 }
+
+.fileUploadLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #6c757d;
+    color: white;
+    padding: 0.75rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid #5a6268;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.2rem;
+}
+
+.fileUploadLabel:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.fileInputHidden {
+    display: none;
+}

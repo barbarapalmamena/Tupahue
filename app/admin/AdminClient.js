@@ -707,13 +707,16 @@ export default function AdminClient({ user }) {
                                                 <option value="mision">Misión</option>
                                             </select>
                                             <div style={{ flex: 1 }}>
-                                                <label style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Subir Imagen:</label>
+                                                <label style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Imagen del Ministerio:</label>
+                                                <label htmlFor="ministerioImagen" className={styles.fileUploadLabel}>
+                                                    <i className="bi bi-image"></i>
+                                                    {archivoImagen ? archivoImagen.name : (editingMinisterioId ? 'Cambiar Imagen' : 'Seleccionar Imagen')}
+                                                </label>
                                                 <input 
                                                     id="ministerioImagen"
                                                     type="file" 
                                                     accept="image/*"
-                                                    className={styles.input} 
-                                                    style={{ padding: '0.4rem' }}
+                                                    className={styles.fileInputHidden} 
                                                     onChange={e => setArchivoImagen(e.target.files[0])} 
                                                 />
                                             </div>
