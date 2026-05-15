@@ -15,14 +15,16 @@ export async function GET(request) {
 
     if (authError || !user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
 
-    // Verificar si es admin en la tabla usuarios
+    // Verificar si es admin en la tabla usuarios o en metadata
     const { data: userData, error: userError } = await supabase
         .from('usuarios')
         .select('rol')
         .eq('id', user.id)
         .single();
 
-    if (userError || userData?.rol !== 'admin') {
+    const isAdmin = userData?.rol === 'admin' || user.user_metadata?.role === 'admin';
+
+    if (!isAdmin) {
         return NextResponse.json({ error: 'Prohibido. Se requiere rol de admin.' }, { status: 403 });
     }
 
