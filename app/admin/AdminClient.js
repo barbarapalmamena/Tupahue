@@ -236,9 +236,9 @@ export default function AdminClient({ user }) {
         let imagenUrl = newMinisterio.imagen;
 
         if (archivoImagen) {
-            // Validar tamaño (máximo 5MB)
-            if (archivoImagen.size > 5 * 1024 * 1024) {
-                alert('La imagen es demasiado grande (máximo 5MB)');
+            // Validar tamaño (máximo 10MB)
+            if (archivoImagen.size > 10 * 1024 * 1024) {
+                alert('La imagen es demasiado grande (máximo 10MB)');
                 setGuardandoMinisterio(false);
                 return;
             }
