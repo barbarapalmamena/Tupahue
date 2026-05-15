@@ -24,7 +24,7 @@ import {
 } from '../../lib/supabase';
 import { supabase, uploadMinisterioImagen } from '@/lib/supabase';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import styles from './admin.module.css';
 
 export default function AdminClient({ user }) {
@@ -320,7 +320,7 @@ export default function AdminClient({ user }) {
         doc.text(title, 14, 30);
         doc.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 14, 38);
         
-        doc.autoTable({
+        autoTable(doc, {
             startY: 45,
             head: [headers],
             body: data,
