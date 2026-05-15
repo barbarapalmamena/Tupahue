@@ -608,7 +608,61 @@ export default function AdminClient({ user }) {
                                     <h2>{editingMinisterioId ? '✏️ Editar Ministerio' : '🤝 Nuevo Ministerio'}</h2>
                                     <form onSubmit={handleCrearMinisterio}>
                                         <div className={styles.formRow}>
-                                            <input className={styles.input} value={newMinisterio.nombre} onChange={e => setNewMinisterio({...newMinisterio, nombre: e.target.value})}
+                                            <input className={styles.input} value={newMinisterio.nombre} onChange={e => setNewMinisterio({...newMinisterio, nombre: e.target.value})} placeholder="Nombre del Ministerio" required />
+                                            <input className={styles.input} value={newMinisterio.encargado} onChange={e => setNewMinisterio({...newMinisterio, encargado: e.target.value})} placeholder="Encargado" required />
+                                        </div>
+                                        <textarea className={styles.textarea} value={newMinisterio.descripcion} onChange={e => setNewMinisterio({...newMinisterio, descripcion: e.target.value})} placeholder="Descripción" required />
+                                        <div className={styles.formRow}>
+                                            <select className={styles.input} value={newMinisterio.categoria} onChange={e => setNewMinisterio({...newMinisterio, categoria: e.target.value})}>
+                                                <option value="pastoral">Pastoral</option>
+                                                <option value="general">General</option>
+                                                <option value="mision">Misión</option>
+                                            </select>
+                                            <input className={styles.input} value={newMinisterio.icono} onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} placeholder="Icono (bi-heart, bi-book...)" />
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '1rem' }}>
+                                            <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio}>{editingMinisterioId ? 'Actualizar' : 'Crear'}</button>
+                                            {editingMinisterioId && <button type="button" onClick={() => {setEditingMinisterioId(null); setNewMinisterio({nombre:'',descripcion:'',encargado:'',categoria:'general',icono:'bi-star'})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
+                                        </div>
+                                    </form>
+                                </div>
+                                <div className={styles.listSection}>
+                                    <h2>📋 Ministerios Registrados</h2>
+                                    <div className={styles.tableContainer}>
+                                        <table className={styles.table}>
+                                            <thead><tr><th>Nombre</th><th>Encargado</th><th>Categoría</th><th>Acciones</th></tr></thead>
+                                            <tbody>
+                                                {ministerios.map(m => (
+                                                    <tr key={m.id}>
+                                                        <td>{m.nombre}</td>
+                                                        <td>{m.encargado}</td>
+                                                        <td>{m.categoria}</td>
+                                                        <td>
+                                                            <div className={styles.actionButtons}>
+                                                                <button onClick={() => prepareEditMinisterio(m)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
+                                                                <button 
+                                                                    onClick={() => { 
+                                                                        if(confirm('¿Eliminar este ministerio?')) {
+                                                                            eliminarMinisterio(m.id).then(({error}) => {
+                                                                                if (error) alert('Error: ' + error.message);
+                                                                                else fetchMinisterios();
+                                                                            });
+                                                                        }
+                                                                    }} 
+                                                                    className={styles.btnDelete}
+                                                                >
+                                                                    <i className="bi bi-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {activeTab === 'usuarios' && (
                             <div className={styles.articlesSection}>
@@ -669,62 +723,7 @@ export default function AdminClient({ user }) {
                                     </div>
                                 </div>
                             </div>
-                        )} placeholder="Nombre del Ministerio" required />
-                                            <input className={styles.input} value={newMinisterio.encargado} onChange={e => setNewMinisterio({...newMinisterio, encargado: e.target.value})} placeholder="Encargado" required />
-                                        </div>
-                                        <textarea className={styles.textarea} value={newMinisterio.descripcion} onChange={e => setNewMinisterio({...newMinisterio, descripcion: e.target.value})} placeholder="Descripción" required />
-                                        <div className={styles.formRow}>
-                                            <select className={styles.input} value={newMinisterio.categoria} onChange={e => setNewMinisterio({...newMinisterio, categoria: e.target.value})}>
-                                                <option value="pastoral">Pastoral</option>
-                                                <option value="general">General</option>
-                                                <option value="mision">Misión</option>
-                                            </select>
-                                            <input className={styles.input} value={newMinisterio.icono} onChange={e => setNewMinisterio({...newMinisterio, icono: e.target.value})} placeholder="Icono (bi-heart, bi-book...)" />
-                                        </div>
-                                        <div style={{ display: 'flex', gap: '1rem' }}>
-                                            <button type="submit" className={styles.submitBtn} disabled={guardandoMinisterio}>{editingMinisterioId ? 'Actualizar' : 'Crear'}</button>
-                                            {editingMinisterioId && <button type="button" onClick={() => {setEditingMinisterioId(null); setNewMinisterio({nombre:'',descripcion:'',encargado:'',categoria:'general',icono:'bi-star'})}} className={styles.submitBtn} style={{backgroundColor:'#6c757d'}}>Cancelar</button>}
-                                        </div>
-                                    </form>
-                                </div>
-                                <div className={styles.listSection}>
-                                    <h2>📋 Ministerios Registrados</h2>
-                                    <div className={styles.tableContainer}>
-                                        <table className={styles.table}>
-                                            <thead><tr><th>Nombre</th><th>Encargado</th><th>Categoría</th><th>Acciones</th></tr></thead>
-                                            <tbody>
-                                                {ministerios.map(m => (
-                                                    <tr key={m.id}>
-                                                        <td>{m.nombre}</td>
-                                                        <td>{m.encargado}</td>
-                                                        <td>{m.categoria}</td>
-                                                        <td>
-                                                            <div className={styles.actionButtons}>
-                                                                <button onClick={() => prepareEditMinisterio(m)} className={styles.btnReminder} style={{backgroundColor:'#ffc107', color:'#000'}}><i className="bi bi-pencil"></i></button>
-                                                                <button 
-                                                                    onClick={() => { 
-                                                                        if(confirm('¿Eliminar este ministerio?')) {
-                                                                            eliminarMinisterio(m.id).then(({error}) => {
-                                                                                if (error) alert('Error: ' + error.message);
-                                                                                else fetchMinisterios();
-                                                                            });
-                                                                        }
-                                                                    }} 
-                                                                    className={styles.btnDelete}
-                                                                >
-                                                                    <i className="bi bi-trash"></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
                         )}
-
                     </>
                 )}
             </div>
